@@ -15,8 +15,5 @@ export class UserController {
   getUser(@Request() req: { user: { id: number } }) {
     return this.userService.getUser(req.user.id);
   }
-  @Get('/demo-data')
-  getDemoData(@Request() req: { user: { id: number } }) {
-    return this.userService.getDemoData();
-  }
+ 
 }

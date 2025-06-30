@@ -70,14 +70,4 @@ export class UserService {
       },
     });
   }
-  async getDemoData() {
-    return await this.prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
-    });
-  }
 }

@@ -24,6 +24,10 @@ export class AuthService {
   ) {}
   // Sign up method
   async signup(dto: CreateUserDto) {
+    // check pass less than 6 characters
+    if (dto.password.length < 6) {
+      throw new ConflictException('Password must be at least 6 characters!');
+    }
     const user = await this.userService.findByEmail(dto.email);
 
     if (user) {
@@ -126,12 +130,11 @@ export class AuthService {
   // Geneerate Token -signin & refreshToken
   async generateTokens(userId: number) {
     const payload: AuthJwtPayload = { sub: userId };
-    console.log('Generating tokens for user:', userId);
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload, this.refreshTokenConfig),
     ]);
-    console.log('Access Token:', accessToken);
+
     return {
       accessToken,
       refreshToken,
