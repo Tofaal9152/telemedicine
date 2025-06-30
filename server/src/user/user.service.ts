@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'argon2';
@@ -17,6 +17,7 @@ export class UserService {
       data: {
         password: hashedPassword,
         ...user,
+        role: 'ADMIN',
       },
     });
   }
@@ -58,16 +59,27 @@ export class UserService {
   }
 
   async getUser(id: number) {
-    return await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        doctor: true,
+        patient: true,
+        admin: true,
       },
     });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    const { password, hashedRefreshToken, doctor, patient, admin, ...rest } =
+      user;
+    const roleData = {
+      ...(doctor ? { doctor } : {}),
+      ...(patient ? { patient } : {}),
+      ...(admin ? { admin } : {}),
+    };
+    return {
+      ...rest,
+      ...roleData,
+    };
   }
 }

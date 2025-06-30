@@ -13,18 +13,22 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import refreshConfig from './config/refresh.config';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { Role } from 'generated/prisma';
+import { CreateDoctorDto } from 'src/doctor/dto/create-doctor.dto';
+import { DoctorService } from 'src/doctor/doctor.service';
+import { sanitizeUser } from 'src/common/utils/sanitize-user.util';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly doctorService: DoctorService,
     private readonly jwtService: JwtService,
     @Inject(refreshConfig.KEY)
     private refreshTokenConfig: ConfigType<typeof refreshConfig>,
   ) {}
   // Sign up method
   async signup(dto: CreateUserDto) {
-    // check pass less than 6 characters
+
     if (dto.password.length < 6) {
       throw new ConflictException('Password must be at least 6 characters!');
     }
@@ -34,12 +38,32 @@ export class AuthService {
       throw new ConflictException('User already exists!');
     }
     const newUser = await this.userService.create(dto);
+    if (!newUser) {
+      throw new ConflictException('User creation failed!');
+    }
     return {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
       message: 'User created successfully!',
+      user : sanitizeUser(newUser),
+    };
+  }
+  // Sign up method for doctor
+  async signupDoctor(createDoctorDto: CreateDoctorDto) {
+    if (createDoctorDto.password.length < 6) {
+      throw new ConflictException('Password must be at least 6 characters!');
+    }
+    const user = await this.userService.findByEmail(createDoctorDto.email);
+
+    if (user) {
+      throw new ConflictException('User already exists!');
+    }
+    const newDoctor = await this.doctorService.create(createDoctorDto);
+
+    if (!newDoctor) {
+      throw new ConflictException('Doctor creation failed!');
+    }
+    return {
+      message: 'Signup successful',
+      user: sanitizeUser(newDoctor),
     };
   }
   // Sign in method

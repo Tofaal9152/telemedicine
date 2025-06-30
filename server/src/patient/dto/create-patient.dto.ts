@@ -1,7 +1,7 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { Gender } from 'generated/prisma';
 
-export class CreateUserDto {
+export class CreatePatientDto {
   @IsString()
   @IsNotEmpty()
   name: string;

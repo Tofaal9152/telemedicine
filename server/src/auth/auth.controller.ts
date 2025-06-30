@@ -14,6 +14,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
 import { GoogleAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './guards';
+import { CreateDoctorDto } from 'src/doctor/dto/create-doctor.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,11 @@ export class AuthController {
   @Post('signup')
   signup(@Body() dto: CreateUserDto) {
     return this.authService.signup(dto);
+  }
+  @Public()
+  @Post('doctor/signup')
+  create(@Body() createDoctorDto: CreateDoctorDto) {
+    return this.authService.signupDoctor(createDoctorDto);
   }
 
   @Public()

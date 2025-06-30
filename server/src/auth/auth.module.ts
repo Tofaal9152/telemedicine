@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { DoctorService } from 'src/doctor/doctor.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthController } from './auth.controller';
@@ -27,6 +28,7 @@ import {
     AuthService,
     PrismaService,
     UserService,
+    DoctorService,
     LocalStrategy,
     JwtStrategy,
     RefreshStrategy,

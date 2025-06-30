@@ -15,18 +15,48 @@ model User {
   password           String?
   hashedRefreshToken String?
   role               Role     @default(PATIENT)
-  age                Int?
-  gender             String?
-  // doctor fields
-  specialty          String?
-  bio                String?
-  isAvailable        Boolean  @default(true)
+  age                String?
+  gender             Gender?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  doctor  Doctor?
+  patient Patient?
+  admin   Admin?
+}
+
+model Doctor {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @unique
+  specialty  String
+  bio        String
+  experience String
+  isApproved Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Patient {
+  id     Int @id @default(autoincrement())
+  userId Int @unique
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Admin {
+  id     Int @id @default(autoincrement())
+  userId Int @unique
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
   ADMIN
   DOCTOR
   PATIENT
+}
+
+enum Gender {
+  male
+  female
 }

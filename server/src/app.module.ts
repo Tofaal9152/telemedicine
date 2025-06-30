@@ -5,6 +5,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { AdminModule } from './admin/admin.module';
+import { DoctorModule } from './doctor/doctor.module';
+import { PatientModule } from './patient/patient.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -12,6 +16,10 @@ import { ConfigModule } from '@nestjs/config';
     PrismaModule,
     AuthModule,
     UserModule,
+    AdminModule,
+    DoctorModule,
+    PatientModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],
