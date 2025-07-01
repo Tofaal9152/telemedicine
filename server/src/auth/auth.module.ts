@@ -15,6 +15,7 @@ import {
   LocalStrategy,
   RefreshStrategy,
 } from './strategies';
+import { PatientService } from 'src/patient/patient.service';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import {
     PrismaService,
     UserService,
     DoctorService,
+    PatientService,
     LocalStrategy,
     JwtStrategy,
     RefreshStrategy,

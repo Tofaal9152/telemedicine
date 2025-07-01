@@ -56,6 +56,7 @@ export class DoctorService {
           name: true,
           age: true,
           gender: true,
+          role: true,
           doctor: {
             select: {
               bio: true,

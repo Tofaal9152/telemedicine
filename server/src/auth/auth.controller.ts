@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Req,
   Request,
@@ -10,29 +11,35 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { Role } from 'generated/prisma';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CreateDoctorDto } from 'src/doctor/dto/create-doctor.dto';
+import { CreatePatientDto } from 'src/patient/dto/create-patient.dto';
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
 import { GoogleAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './guards';
-import { CreateDoctorDto } from 'src/doctor/dto/create-doctor.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Public()
-  @Post('signup')
-  signup(@Body() dto: CreateUserDto) {
-    return this.authService.signup(dto);
-  }
+  // @Public()
+  // @Post('signup')
+  // signup(@Body() dto: CreateUserDto) {
+  //   return this.authService.signup(dto);
+  // }
   @Public()
   @Post('doctor/signup')
-  create(@Body() createDoctorDto: CreateDoctorDto) {
+  signupDoctor(@Body() createDoctorDto: CreateDoctorDto) {
     return this.authService.signupDoctor(createDoctorDto);
+  }
+  @Public()
+  @Post('patient/signup')
+  signupPatient(@Body() createPatientDto: CreatePatientDto) {
+    return this.authService.signupPatient(createPatientDto);
   }
 
   @Public()
   @UseGuards(LocalAuthGuard)
+  @HttpCode(200)
   @Post('signin')
   signin(
     @Request()
