@@ -142,4 +142,52 @@ export class DoctorService {
 
     return sanitizeUser(updatedDoctor);
   }
+
+  // Get all approved doctors
+  async getApprovedDoctors(paginationDto: PaginationDto, baseUrl: string) {
+    const page = paginationDto.page;
+    const limit = paginationDto.limit;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        where: {
+          role: 'DOCTOR',
+          doctor: {
+            isApproved: true,
+          },
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          age: true,
+          gender: true,
+          role: true,
+          doctor: {
+            select: {
+              bio: true,
+              experience: true,
+              specialty: true,
+              isApproved: true,
+            },
+          },
+          createdAt: true,
+        },
+      }),
+      this.prisma.user.count({ where: { role: 'DOCTOR' } }),
+    ]);
+
+    const meta = this.paginationService.buildPaginationMeta(
+      baseUrl,
+      page,
+      limit,
+      total,
+    );
+
+    return { ...meta, results: data };
+  }
 }
