@@ -6,11 +6,26 @@ export type LoginType = {
   };
 };
 
-export type RegisterType = {
+export type PatientRegisterType = {
   errors: {
     name?: string[];
     email?: string[];
     password?: string[];
+    age?: string[];
+    gender?: string[];
+    formError?: string[];
+  };
+};
+export type DoctorRegisterType = {
+  errors: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    age?: string[];
+    gender?: string[];
+    specialty?: string[];
+    experience?: string[];
+    bio?: string[];
     formError?: string[];
   };
 };

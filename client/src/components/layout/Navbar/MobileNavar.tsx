@@ -45,34 +45,34 @@ const MobileNavbar = ({
       >
         <div className="flex flex-col items-center">
           <SheetHeader className="text-center">
-        <SheetTitle className="text-xl font-bold text-pink-200">
-          Menu
-        </SheetTitle>
-        <SheetDescription className="text-sm text-pink-100 ">
-          Navigate through the site
-        </SheetDescription>
+            <SheetTitle className="text-xl font-bold text-pink-200">
+              Menu
+            </SheetTitle>
+            <SheetDescription className="text-sm text-pink-100 ">
+              Navigate through the site
+            </SheetDescription>
           </SheetHeader>
         </div>
 
         {/* Navigation Links */}
         <ul className="mt-6 space-y-4 px-4">
           {navItems.map((item, index) => (
-        <li key={index}>
-          <SheetTrigger asChild>
-            <Link
-          href={item.link}
-          className="flex items-center gap-2 text-pink-100 font-medium hover:underline"
-            >
-          {item.icon}
-          <span>{item.name}</span>
-            </Link>
-          </SheetTrigger>
-        </li>
+            <li key={index}>
+              <SheetTrigger asChild>
+                <Link
+                  href={item.link}
+                  className="flex items-center gap-2 text-pink-100 font-medium hover:underline"
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
+                </Link>
+              </SheetTrigger>
+            </li>
           ))}
         </ul>
         <div className="absolute bottom-4 left-4 flex items-center gap-2">
-          <ModeToggle/>
-          <SignButton/>
+          <ModeToggle />
+          <SignButton />
         </div>
       </SheetContent>
     </Sheet>

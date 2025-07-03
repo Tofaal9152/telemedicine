@@ -1,5 +1,5 @@
 import SigninForm from "@/components/pages/auth/SigninForm";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const page = () => {
@@ -15,14 +15,14 @@ const page = () => {
             Sign Up
           </Link>
         </p>
-        <Button asChild variant="outline" className="w-full">
+        {/* <Button asChild variant="outline" className="w-full">
           <a
             href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google/login`}
             className="mt-4 text-sm  text-gray-400"
           >
             Sign in with Google
           </a>
-        </Button>
+        </Button> */}
       </div>
     </section>
   );
