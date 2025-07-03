@@ -31,12 +31,12 @@ export class AdminController {
   }
 
   @Get('patient/:id')
-  findOnePatient(@Param('id', ParseIntPipe) id: string) {
+  findOnePatient(@Param('id', ParseIntPipe) id: number) {
     return this.adminService.findOnePatient(id);
   }
   //  remove patient
   @Delete('patient/:id')
-  removePatient(@Param('id', ParseIntPipe) id: string) {
+  removePatient(@Param('id', ParseIntPipe) id: number) {
     return this.adminService.removePatient(id);
   }
 
@@ -51,19 +51,19 @@ export class AdminController {
   }
 
   @Get('doctor/:id')
-  findOneDoctor(@Param('id', ParseIntPipe) id: string) {
+  findOneDoctor(@Param('id', ParseIntPipe) id: number) {
     return this.adminService.findOneDoctor(id);
   }
 
   @Delete('doctor/:id')
-  removeDoctor(@Param('id', ParseIntPipe) id: string) {
+  removeDoctor(@Param('id', ParseIntPipe) id: number) {
     return this.adminService.removeDoctor(id);
   }
 
   // Approve doctor
   @Patch('doctor/:id/approval')
   approveDoctor(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body('isApproved', ParseBoolPipe) isApproved: boolean,
   ) {
     return this.adminService.setApproval(id, isApproved);

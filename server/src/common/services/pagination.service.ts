@@ -22,7 +22,7 @@ export class PaginationService {
       count: total,
       totalPages,
       currentPage: page,
-    //   pageSize: limit,
+      pageSize: limit,
       next,
       previous,
     };

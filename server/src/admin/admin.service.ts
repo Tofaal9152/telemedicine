@@ -11,14 +11,14 @@ export class AdminService {
   ) {}
 
   // patients
- findAllPatients(paginationDto: PaginationDto, baseUrl: string) {
+  findAllPatients(paginationDto: PaginationDto, baseUrl: string) {
     return this.patientService.findAll(paginationDto, baseUrl);
   }
 
-  findOnePatient(id: string) {
+  findOnePatient(id: number) {
     return this.patientService.findOne(id);
   }
-  removePatient(id: string) {
+  removePatient(id: number) {
     return this.patientService.remove(id);
   }
 
@@ -27,15 +27,15 @@ export class AdminService {
     return this.doctorService.findAll(paginationDto, baseUrl);
   }
 
-  findOneDoctor(id: string) {
+  findOneDoctor(id: number) {
     return this.doctorService.findOne(id);
   }
 
-  removeDoctor(id: string) {
+  removeDoctor(id: number) {
     return this.doctorService.remove(id);
   }
 
-  setApproval(id: string, isApproved: boolean) {
+  setApproval(id: number, isApproved: boolean) {
     return this.doctorService.setApproval(id, isApproved);
   }
 }

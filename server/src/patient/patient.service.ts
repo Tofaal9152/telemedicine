@@ -5,6 +5,7 @@ import { PaginationService } from 'src/common/services/pagination.service';
 import { sanitizeUser } from 'src/common/utils/sanitize-user.util';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
+import { UpdatePatientDto } from './dto/update-patient.dto';
 
 @Injectable()
 export class PatientService {
@@ -33,6 +34,27 @@ export class PatientService {
       },
     });
   }
+
+  async getProfile(id: number) {
+    return await this.findOne(id);
+  }
+
+  async updateProfile(id: number, updatePatientDto: UpdatePatientDto) {
+    await this.findOne(id);
+
+    const updatedPatient = await this.prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        ...updatePatientDto,
+      },
+      include: {
+        patient: true,
+      },
+    });
+
+    return sanitizeUser(updatedPatient);
+  }
+
   async findAll(paginationDto: PaginationDto, baseUrl: string) {
     const page = paginationDto.page;
     const limit = paginationDto.limit;
@@ -67,32 +89,23 @@ export class PatientService {
     return { ...meta, results: data };
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const patient = await this.prisma.user.findUnique({
       where: {
         id: Number(id),
-        role: 'PATIENT',
       },
       include: {
         patient: true,
       },
     });
-    if (!patient) {
+    if (!patient || patient.role !== 'PATIENT') {
       throw new NotFoundException(`Patient with id ${id} not found`);
     }
     return sanitizeUser(patient);
   }
 
-  async remove(id: string) {
-    const patient = await this.prisma.user.findUnique({
-      where: {
-        id: Number(id),
-        role: 'PATIENT',
-      },
-    });
-    if (!patient) {
-      throw new NotFoundException(`Patient with id ${id} not found`);
-    }
+  async remove(id: number) {
+    await this.findOne(id);
 
     const deleteUser = await this.prisma.user.delete({
       where: {

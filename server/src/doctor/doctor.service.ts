@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { hash } from 'argon2';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginationService } from 'src/common/services/pagination.service';
 import { sanitizeUser } from 'src/common/utils/sanitize-user.util';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
+import { UpdateDoctorDto } from './dto/update-doctor.dto';
 
 @Injectable()
 export class DoctorService {
@@ -37,6 +42,32 @@ export class DoctorService {
         doctor: true,
       },
     });
+  }
+
+  async getProfile(id: number) {
+    return await this.findOne(id);
+  }
+
+  async updateProfile(id: number, updateDoctorDto: UpdateDoctorDto) {
+    await this.findOne(id);
+    console.log(updateDoctorDto);
+    const updatedDoctor = await this.prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        ...updateDoctorDto,
+        doctor: {
+          update: {
+            bio: updateDoctorDto.bio,
+            experience: updateDoctorDto.experience,
+          },
+        },
+      },
+      include: {
+        doctor: true,
+      },
+    });
+
+    return sanitizeUser(updatedDoctor);
   }
 
   async findAll(paginationDto: PaginationDto, baseUrl: string) {
@@ -81,32 +112,23 @@ export class DoctorService {
     return { ...meta, results: data };
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const doctor = await this.prisma.user.findUnique({
       where: {
         id: Number(id),
-        role: 'DOCTOR',
       },
       include: {
         doctor: true,
       },
     });
-    if (!doctor) {
+    if (!doctor || doctor.role !== 'DOCTOR') {
       throw new NotFoundException(`Doctor with id ${id} not found`);
     }
     return sanitizeUser(doctor);
   }
 
-  async remove(id: string) {
-    const doctor = await this.prisma.user.findUnique({
-      where: {
-        id: Number(id),
-        role: 'DOCTOR',
-      },
-    });
-    if (!doctor) {
-      throw new NotFoundException(`Doctor with id ${id} not found`);
-    }
+  async remove(id: number) {
+    await this.findOne(id);
 
     const deleteUser = await this.prisma.user.delete({
       where: {
@@ -118,18 +140,9 @@ export class DoctorService {
     }
     return { message: `Doctor with id ${id} removed successfully` };
   }
-
-  async setApproval(id: string, isApproved: boolean) {
-    const doctor = await this.prisma.user.findUnique({
-      where: {
-        id: Number(id),
-        role: 'DOCTOR',
-      },
-    });
-    if (!doctor) {
-      throw new NotFoundException(`Doctor with id ${id} not found`);
-    }
-
+  // Approve or disapprove a doctor by
+  async setApproval(id: number, isApproved: boolean) {
+    await this.findOne(id);
     const updatedDoctor = await this.prisma.user.update({
       where: { id: Number(id) },
       data: {
@@ -142,13 +155,13 @@ export class DoctorService {
 
     return sanitizeUser(updatedDoctor);
   }
-
   // Get all approved doctors
-  async getApprovedDoctors(paginationDto: PaginationDto, baseUrl: string) {
-    const page = paginationDto.page;
-    const limit = paginationDto.limit;
-    const skip = (page - 1) * limit;
-
+  async findApprovedDoctors(
+    page: number,
+    skip: number,
+    limit: number,
+    baseUrl: string,
+  ) {
     const [data, total] = await this.prisma.$transaction([
       this.prisma.user.findMany({
         skip,
@@ -156,9 +169,7 @@ export class DoctorService {
         orderBy: { createdAt: 'desc' },
         where: {
           role: 'DOCTOR',
-          doctor: {
-            isApproved: true,
-          },
+          doctor: { isApproved: true },
         },
         select: {
           id: true,
@@ -178,7 +189,13 @@ export class DoctorService {
           createdAt: true,
         },
       }),
-      this.prisma.user.count({ where: { role: 'DOCTOR' } }),
+
+      this.prisma.user.count({
+        where: {
+          role: 'DOCTOR',
+          doctor: { isApproved: true },
+        },
+      }),
     ]);
 
     const meta = this.paginationService.buildPaginationMeta(

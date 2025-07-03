@@ -1,20 +1,23 @@
-import { Controller, Get, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Request } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { DoctorService } from './doctor.service';
-import { Public } from 'src/auth/decorators';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { Request } from 'express';
+import { UpdateDoctorDto } from './dto/update-doctor.dto';
 
 @Controller('doctor')
+@Roles('DOCTOR')
 export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
-  @Public()
-  @Get('approved-doctors')
-  getApprovedDoctors(
-    @Query() paginationDto: PaginationDto,
-    @Req() request: Request,
+  @Get('profile')
+  getPatientInfo(@Request() req: { user: { id: number } }) {
+    return this.doctorService.getProfile(req.user.id);
+  }
+
+  @Patch('profile')
+  updatePatientInfo(
+    @Request() req: { user: { id: number } },
+    @Body() updatePatientDto: UpdateDoctorDto,
   ) {
-    const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
-    return this.doctorService.getApprovedDoctors(paginationDto, baseUrl);
+    return this.doctorService.updateProfile(req.user.id, updatePatientDto);
   }
 }
