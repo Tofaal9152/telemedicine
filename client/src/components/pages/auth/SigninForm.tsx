@@ -1,4 +1,5 @@
 "use client";
+
 import { SigninAction } from "@/actions/auth/signin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,7 @@ const SignupForm = () => {
   const [state, action, isPending] = useActionState(SigninAction, {
     errors: {},
   });
+  console.log(state);
   return (
     <form action={action} className="w-full">
       <Input name="email" type="email" placeholder="Email" className="mb-4" />

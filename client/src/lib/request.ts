@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 // GET
-export const getter = async <T = any>(url: string): Promise<T> => {
+export const fetcher = async <T = any>(url: string): Promise<T> => {
   const res = await apiClient.get<T>(url);
   return res.data;
 };

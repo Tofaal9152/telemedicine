@@ -59,6 +59,15 @@ export class UserService {
       data: {
         hashedRefreshToken: refreshToken,
       },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        doctor: true,
+        patient: true,
+        admin: true,
+      },
     });
   }
 

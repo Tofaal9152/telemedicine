@@ -1,5 +1,5 @@
-import { getter } from "@/lib/request";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { fetcher } from "@/lib/fetcher";
 
 export function useFetchData<T>(
   url: string,
@@ -7,6 +7,6 @@ export function useFetchData<T>(
 ): UseQueryResult<T> {
   return useQuery<T>({
     queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
-    queryFn: () => getter<T>(url),
+    queryFn: () => fetcher<T>(url),
   });
 }

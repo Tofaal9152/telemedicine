@@ -44,6 +44,33 @@ export class DoctorService {
     });
   }
 
+  async adminCreateDoctor(createDoctorDto: CreateDoctorDto) {
+    const { password, ...user } = createDoctorDto;
+    const hashedPassword = await hash(password);
+
+    return await this.prisma.user.create({
+      data: {
+        name: user.name,
+        email: user.email,
+        password: hashedPassword,
+        age: user.age,
+        gender: user.gender,
+        role: 'DOCTOR',
+        doctor: {
+          create: {
+            bio: user.bio,
+            specialty: user.specialty,
+            experience: user.experience,
+            isApproved: true,
+          },
+        },
+      },
+      include: {
+        doctor: true,
+      },
+    });
+  }
+
   async getProfile(id: number) {
     return await this.findOne(id);
   }
@@ -125,6 +152,19 @@ export class DoctorService {
       throw new NotFoundException(`Doctor with id ${id} not found`);
     }
     return sanitizeUser(doctor);
+  }
+
+  async findByEmail(email: string) {
+    const doctor = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        doctor: true,
+      },
+    });
+
+    return doctor;
   }
 
   async remove(id: number) {

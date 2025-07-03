@@ -2,7 +2,7 @@
 
 import imagePath from "@/constants/imagePath";
 import clsx from "clsx";
-import NextImage, { ImageProps } from "next/image";
+import Image, { ImageProps } from "next/image";
 
 type CustomImageProps = ImageProps & {
   className?: string;
@@ -16,14 +16,15 @@ const CustomImage = ({
   wrapperClassName,
   alt = "",
   withBlur = true,
+  fallbackSrc,
   ...props
 }: CustomImageProps) => {
   return (
     <div className={clsx("relative overflow-hidden", wrapperClassName)}>
-      <NextImage
+      <Image
         {...props}
         alt={alt}
-        src={props.src || imagePath.imageNotAvailable}
+        src={props.src || fallbackSrc || imagePath.imageNotAvailable}
         className={clsx(
           className,
           "transition-opacity duration-1000 opacity-0",

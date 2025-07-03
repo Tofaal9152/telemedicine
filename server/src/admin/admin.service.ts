@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { DoctorService } from 'src/doctor/doctor.service';
+import { CreateDoctorDto } from 'src/doctor/dto/create-doctor.dto';
 import { PatientService } from 'src/patient/patient.service';
 
 @Injectable()
@@ -23,6 +24,17 @@ export class AdminService {
   }
 
   // Doctors
+  async createDoctor(createDoctorDto: CreateDoctorDto) {
+    if (createDoctorDto.password.length < 6) {
+      throw new ConflictException('Password must be at least 6 characters!');
+    }
+    const user = await this.doctorService.findByEmail(createDoctorDto.email);
+
+    if (user) {
+      throw new ConflictException('User already exists!');
+    }
+    return this.doctorService.adminCreateDoctor(createDoctorDto);
+  }
   findAllDoctors(paginationDto: PaginationDto, baseUrl: string) {
     return this.doctorService.findAll(paginationDto, baseUrl);
   }

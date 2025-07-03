@@ -6,11 +6,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export function AppSidebarHeader({session}: { session: any }) {
+export function AppSidebarHeader({ session }: { session: any }) {
   const activeTeam = {
-    name: "Ra Physics",
-    logo: "/images/raPhysicsLogo.png",
-    plan: "Back",
+    name: "Telemedicin",
+    logo: "/logo.png",
   };
 
   return (
@@ -19,7 +18,7 @@ export function AppSidebarHeader({session}: { session: any }) {
         <Link href="/">
           <SidebarMenuButton
             size="lg"
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-white"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
           >
             <Image
               src={activeTeam.logo}
@@ -30,10 +29,8 @@ export function AppSidebarHeader({session}: { session: any }) {
             />
             <div className="grid flex-1 text-left text-sm leading-tight cursor-pointer">
               <span className="truncate font-semibold">{activeTeam.name}</span>
-              <span className="truncate text-xs ">
-                {/* <ArrowLeft size={16} className="inline-block mr-1" />
-                {activeTeam.plan} */}
-                ({session?.user?.role || "Guest User"})
+              <span className="truncate text-xs mt-1">
+                ({session?.user?.role || "ADMIN"})
               </span>
             </div>
           </SidebarMenuButton>

@@ -3,14 +3,9 @@
 import { PatientSignUpAction } from "@/actions/auth/PatientSignUpAction";
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/LoadingButton";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { useActionState } from "react";
+import SelectGender from "../dashboard/agentControl/SelectGender";
 const PatientSignupForm = () => {
   const [state, action, isPending] = useActionState(PatientSignUpAction, {
     errors: {},
@@ -37,15 +32,7 @@ const PatientSignupForm = () => {
         <p className="text-red-500 text-sm">{state.errors.age}</p>
       )}
 
-      <Select name="gender" required>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Gender" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="male">Male</SelectItem>
-          <SelectItem value="female">Female</SelectItem>
-        </SelectContent>
-      </Select>
+      <SelectGender />
       {state.errors.gender && (
         <p className="text-red-500 text-sm">{state.errors.gender}</p>
       )}

@@ -1,4 +1,4 @@
-import PopoverIcon from "@/components/layout/Navbar/PopoverIcon";
+import Profile from "@/components/layout/Navbar/Profile/Profile";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/lib/session";
 import { LogInIcon } from "lucide-react";
@@ -10,11 +10,11 @@ const SignButton = async () => {
   return (
     <>
       {session ? (
-        <PopoverIcon />
+        <Profile />
       ) : (
         <div className="flex items-center space-x-2">
           <Link href="/auth/signin">
-            <Button variant={"outline"}>
+            <Button variant={"secondary"} className="bg-[#4f3d80] hover:bg-[#3e2f6b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-4 py-2">
               <LogInIcon /> Login
             </Button>
           </Link>

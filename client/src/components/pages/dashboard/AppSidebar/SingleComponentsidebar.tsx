@@ -29,7 +29,7 @@ function SingleComponentsidebar({
         {items.map((item) => (
           <SidebarMenuItem className="group" key={item.name}>
             <SidebarMenuButton asChild>
-              <Link href={item.url} className="text-white">
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
               </Link>

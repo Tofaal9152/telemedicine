@@ -71,6 +71,7 @@ export class PatientService {
           email: true,
           name: true,
           age: true,
+          role: true,
           gender: true,
           patient: true,
           createdAt: true,

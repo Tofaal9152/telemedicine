@@ -7,6 +7,7 @@ import {
   ParseBoolPipe,
   ParseIntPipe,
   Patch,
+  Post,
   Query,
   Req,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { Request } from 'express';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { AdminService } from './admin.service';
+import { CreateDoctorDto } from 'src/doctor/dto/create-doctor.dto';
 
 @Controller('admin')
 @Roles('ADMIN')
@@ -41,6 +43,10 @@ export class AdminController {
   }
 
   // Doctors
+  @Post('doctor')
+  createDoctor(@Body() createDoctorDto: CreateDoctorDto) {
+    return this.adminService.createDoctor(createDoctorDto);
+  }
   @Get('doctors')
   findAllDoctors(
     @Query() paginationDto: PaginationDto,

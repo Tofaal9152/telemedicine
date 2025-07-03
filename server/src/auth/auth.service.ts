@@ -88,6 +88,22 @@ export class AuthService {
       user: sanitizeUser(newPatient),
     };
   }
+
+  async signin(userId: number, role: Role, name?: string, email?: string) {
+    const { accessToken, refreshToken } = await this.generateTokens(userId);
+    const hashedRefreshToken = await hash(refreshToken);
+    const user = await this.userService.updateRefreshToken(
+      userId,
+      hashedRefreshToken,
+    );
+
+    return {
+      user,
+      accessToken,
+      refreshToken,
+    };
+  }
+
   // Sign in method
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
@@ -111,23 +127,7 @@ export class AuthService {
       role: user.role,
     };
   }
-  async signin(userId: number, role: Role, name?: string, email?: string) {
-    const { accessToken, refreshToken } = await this.generateTokens(userId);
-    const hashedRefreshToken = await hash(refreshToken);
-    await this.userService.updateRefreshToken(userId, hashedRefreshToken);
 
-    return {
-      user: {
-        id: userId,
-        email,
-        name,
-        role,
-      },
-      verified: true,
-      accessToken,
-      refreshToken,
-    };
-  }
   // validate method for JWT strategy
   async validateJwtUser(userId: number) {
     const user = await this.userService.findById(userId);

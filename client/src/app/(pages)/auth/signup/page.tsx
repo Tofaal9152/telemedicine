@@ -3,6 +3,7 @@ import Link from "next/link";
 import DoctorSignupForm from "@/components/pages/auth/DoctorSignupForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PatientSignupForm from "@/components/pages/auth/PatientSignupForm";
+
 const page = () => {
   return (
     <section className="flex flex-col items-center justify-center h-screen">

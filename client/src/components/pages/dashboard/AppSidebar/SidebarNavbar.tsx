@@ -1,5 +1,5 @@
+import Profile from "@/components/layout/Navbar/Profile/Profile";
 import ModeToggle from "@/components/ui/ModeToggle";
-import Profile from "@/components/Profile/Profile";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -12,7 +12,7 @@ const SidebarNavbar = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <ModeToggle style={true} />
+        <ModeToggle />
         {/* Profile icon */}
         <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
           <Profile />

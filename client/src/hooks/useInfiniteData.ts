@@ -1,5 +1,5 @@
-import { getter } from "@/lib/request";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/fetcher";
 
 type PaginatedResponse<T> = {
   count: number;
@@ -15,7 +15,7 @@ export function useInfiniteData<T>(
   return useInfiniteQuery<PaginatedResponse<T>>({
     queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
     queryFn: ({ pageParam = initialUrl }) =>
-      getter<PaginatedResponse<T>>(pageParam as string),
+      fetcher<PaginatedResponse<T>>(pageParam as string),
     getNextPageParam: (lastPage) => lastPage.next ?? undefined,
     initialPageParam: initialUrl,
   });

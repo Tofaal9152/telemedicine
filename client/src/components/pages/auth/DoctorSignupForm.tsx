@@ -3,19 +3,22 @@
 import { DoctorSignUpAction } from "@/actions/auth/DoctorSignUpAction";
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/LoadingButton";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useActionState } from "react";
+
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import SelectGender from "../dashboard/agentControl/SelectGender";
 const DoctorSignupForm = () => {
+  const router = useRouter();
   const [state, action, isPending] = useActionState(DoctorSignUpAction, {
     errors: {},
   });
-
+  useEffect(() => {
+    if (state.success && !isPending) {
+      router.push("/auth/signin");
+      toast.success(state.message);
+    }
+  }, [state.success, state.message, isPending]);
   return (
     <form action={action} className="w-full gap-4 grid grid-cols-1 mt-4">
       <Input name="name" type="text" placeholder="Name" />
@@ -37,15 +40,7 @@ const DoctorSignupForm = () => {
         <p className="text-red-500 text-sm">{state.errors.age}</p>
       )}
 
-      <Select name="gender">
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Gender" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="male">Male</SelectItem>
-          <SelectItem value="female">Female</SelectItem>
-        </SelectContent>
-      </Select>
+      <SelectGender />
       {state.errors.gender && (
         <p className="text-red-500 text-sm">{state.errors.gender}</p>
       )}

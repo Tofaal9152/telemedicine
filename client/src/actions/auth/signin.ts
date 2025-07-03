@@ -1,4 +1,4 @@
-"use server";
+// "use server";
 import HandleError from "@/lib/errorHandle";
 import { CreateSession } from "@/lib/session";
 import { validateForm } from "@/lib/validateForm";
@@ -31,10 +31,20 @@ export const SigninAction = async (
         },
       }
     );
-    console.log(res);
+
+    if (res.data.user?.doctor && res.data.user.doctor.isApproved === false) {
+      return {
+        errors: {
+          formError: [
+            "Your account is not verified yet. Please contact support.",
+          ],
+        },
+      };
+    }
     await CreateSession({
       user: {
         id: res?.data?.user?.id,
+        name: res?.data?.user?.name,
         email: res?.data?.user?.email,
         role: res?.data?.user?.role,
       },
@@ -44,6 +54,5 @@ export const SigninAction = async (
   } catch (error) {
     return HandleError(error);
   }
-
   redirect("/");
 };

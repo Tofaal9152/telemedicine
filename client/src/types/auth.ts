@@ -17,6 +17,8 @@ export type PatientRegisterType = {
   };
 };
 export type DoctorRegisterType = {
+  success?: boolean;
+  message?: string;
   errors: {
     name?: string[];
     email?: string[];

@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Trash2Icon } from "lucide-react";
-import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import LoadingButton from "@/components/ui/LoadingButton";
 import apiClient from "@/lib/apiClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 interface DeleteButtonProps {
-  id: string;
-  resourceUrl: string; 
+  resourceUrl: string;
   queryKey: string | string[];
   confirmMessage?: string;
   successMessage?: string;
@@ -16,7 +16,6 @@ interface DeleteButtonProps {
 }
 
 const DeleteButton = ({
-  id,
   resourceUrl,
   queryKey,
   errorMessage = "Delete failed",
@@ -26,7 +25,7 @@ const DeleteButton = ({
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => apiClient.delete(`${resourceUrl}?id=${id}`),
+    mutationFn: () => apiClient.delete(`${resourceUrl}`),
     onSuccess: () => {
       toast.success(successMessage);
       queryClient.invalidateQueries({
@@ -39,19 +38,22 @@ const DeleteButton = ({
   });
 
   return (
-    <Button
+    <LoadingButton
       variant="destructive"
       size="sm"
-      disabled={isPending}
+      isLoading={isPending}
       onClick={() => {
         if (confirm(confirmMessage)) {
           mutate();
         }
       }}
     >
-      <Trash2Icon className="w-4 h-4 mr-1" />
-      {isPending ? "Deleting..." : "Delete"}
-    </Button>
+      {isPending ? (
+        <Loader className="w-4 h-4 mr-1 animate-spin" />
+      ) : (
+        <Trash2Icon className="w-4 h-4 mr-1" />
+      )}
+    </LoadingButton>
   );
 };
 

@@ -3,7 +3,7 @@ import { getSession } from "./session";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 apiClient.interceptors.request.use(async (config) => {

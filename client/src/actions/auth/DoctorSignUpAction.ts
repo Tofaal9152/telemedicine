@@ -4,7 +4,6 @@ import HandleError from "@/lib/errorHandle";
 import { validateForm } from "@/lib/validateForm";
 import { DoctorRegisterType } from "@/types/auth";
 import { DoctorRegisterSchema } from "@/zod-schemas/auth";
-import { redirect } from "next/navigation";
 
 export const DoctorSignUpAction = async (
   previousState: DoctorRegisterType,
@@ -29,8 +28,12 @@ export const DoctorSignUpAction = async (
     });
 
     console.log(res.data);
+    return {
+      success: true,
+      message: "Doctor registered successfully",
+      errors: {},
+    };
   } catch (error) {
     return HandleError(error);
   }
-  redirect("/auth/signin");
 };

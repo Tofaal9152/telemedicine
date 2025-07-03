@@ -22,12 +22,12 @@ export default function ModeToggle() {
   return (
     <Button
       onClick={handleClick}
-      variant="outline"
-      className={`bg-transparent hover:scale-x-110 `}
+      variant="secondary"
+      className={`hover:scale-x-110 bg-[#4f3d80] hover:bg-[#4f3d80]`}
       size="icon"
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 " />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className="h-[1.2rem] w-[1.2rem] text-white rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 " />
+      <Moon className="absolute h-[1.2rem] text-white w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
