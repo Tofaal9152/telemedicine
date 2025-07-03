@@ -115,6 +115,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
     const hashedRefreshToken = await hash(refreshToken);
     await this.userService.updateRefreshToken(userId, hashedRefreshToken);
+
     return {
       user: {
         id: userId,
@@ -122,6 +123,7 @@ export class AuthService {
         name,
         role,
       },
+      verified: true,
       accessToken,
       refreshToken,
     };
