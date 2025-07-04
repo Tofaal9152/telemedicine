@@ -12,7 +12,7 @@ const inter = Inter({
   weight: "400",
 });
 export const metadata: Metadata = {
-  title: "Up&Pro",
+  title: "Telemedicine",
   description: "Speak English Fluently in Just 3 Months",
 };
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSession } from "./session";
+import { destroySession, getSession } from "./session";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -13,5 +13,16 @@ apiClient.interceptors.request.use(async (config) => {
   }
   return config;
 });
+// handle 401
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+     await destroySession();
+      window.location.href = '/auth/login'; 
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;

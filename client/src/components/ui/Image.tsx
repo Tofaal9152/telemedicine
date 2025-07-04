@@ -19,8 +19,10 @@ const CustomImage = ({
   fallbackSrc,
   ...props
 }: CustomImageProps) => {
+   console.log(props.src )
   return (
     <div className={clsx("relative overflow-hidden", wrapperClassName)}>
+     
       <Image
         {...props}
         alt={alt}
