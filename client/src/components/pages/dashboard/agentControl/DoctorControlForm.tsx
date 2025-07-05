@@ -64,6 +64,10 @@ const DoctorControlForm = () => {
       {state.errors.bio && (
         <p className="text-red-500 text-sm">{state.errors.bio}</p>
       )}
+      <Input name="visitFee" type="number" placeholder="Visit Fee" />
+      {state.errors.visitFee && (
+        <p className="text-red-500 text-sm">{state.errors.visitFee}</p>
+      )}
 
       <LoadingButton isLoading={isPending} className="w-full">
         Sign Up

@@ -89,7 +89,7 @@ export class AuthService {
     };
   }
 
-  async signin(userId: number, role: Role, name?: string, email?: string) {
+  async signin(userId: string, role: Role, name?: string, email?: string) {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
     const hashedRefreshToken = await hash(refreshToken);
     const user = await this.userService.updateRefreshToken(
@@ -129,7 +129,7 @@ export class AuthService {
   }
 
   // validate method for JWT strategy
-  async validateJwtUser(userId: number) {
+  async validateJwtUser(userId: string) {
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials!');
@@ -141,7 +141,7 @@ export class AuthService {
   }
   // Refresh token method
 
-  async refreshToken(userId: number, name?: string) {
+  async refreshToken(userId: string, name?: string) {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
 
     const hashedRefreshToken = await hash(refreshToken);
@@ -156,7 +156,7 @@ export class AuthService {
       },
     };
   }
-  async validateRefreshToken(userId: number, refreshToken: string) {
+  async validateRefreshToken(userId: string, refreshToken: string) {
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials!');
@@ -176,7 +176,7 @@ export class AuthService {
     };
   }
   // Geneerate Token -signin & refreshToken
-  async generateTokens(userId: number) {
+  async generateTokens(userId: string) {
     const payload: AuthJwtPayload = { sub: userId };
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
@@ -195,7 +195,7 @@ export class AuthService {
     return await this.userService.createGoogleLogin(googleUser);
   }
   // Sign out method
-  async signOut(userId: number) {
+  async signOut(userId: string) {
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials!');

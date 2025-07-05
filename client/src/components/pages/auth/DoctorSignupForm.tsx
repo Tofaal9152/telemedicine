@@ -18,7 +18,7 @@ const DoctorSignupForm = () => {
       router.push("/auth/signin");
       toast.success(state.message);
     }
-  }, [state.success, state.message, isPending]);
+  }, [state.success, state.message, isPending, router]);
   return (
     <form action={action} className="w-full gap-4 grid grid-cols-1 mt-4">
       <Input name="name" type="text" placeholder="Name" />
@@ -57,6 +57,10 @@ const DoctorSignupForm = () => {
       <Input name="bio" type="text" placeholder="Bio" />
       {state.errors.bio && (
         <p className="text-red-500 text-sm">{state.errors.bio}</p>
+      )}
+      <Input name="visitFee" type="number" placeholder="Visit Fee" />
+      {state.errors.visitFee && (
+        <p className="text-red-500 text-sm">{state.errors.visitFee}</p>
       )}
 
       <LoadingButton isLoading={isPending} className="w-full">

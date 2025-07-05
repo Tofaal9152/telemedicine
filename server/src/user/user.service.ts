@@ -18,6 +18,9 @@ export class UserService {
         password: hashedPassword,
         ...user,
         role: 'ADMIN',
+        admin: {
+          create: {},
+        },
       },
     });
   }
@@ -43,7 +46,7 @@ export class UserService {
     });
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return await this.prisma.user.findUnique({
       where: {
         id,
@@ -51,7 +54,7 @@ export class UserService {
     });
   }
 
-  async updateRefreshToken(userId: number, refreshToken: string | null) {
+  async updateRefreshToken(userId: string, refreshToken: string | null) {
     return await this.prisma.user.update({
       where: {
         id: userId,
@@ -71,28 +74,5 @@ export class UserService {
     });
   }
 
-  async getUser(id: number) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      include: {
-        doctor: true,
-        patient: true,
-        admin: true,
-      },
-    });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    const { password, hashedRefreshToken, doctor, patient, admin, ...rest } =
-      user;
-    const roleData = {
-      ...(doctor ? { doctor } : {}),
-      ...(patient ? { patient } : {}),
-      ...(admin ? { admin } : {}),
-    };
-    return {
-      ...rest,
-      ...roleData,
-    };
-  }
+ 
 }

@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginationService } from 'src/common/services/pagination.service';
+import { DoctorService } from 'src/doctor/doctor.service';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const SSLCommerzPayment = require('sslcommerz-lts');
 @Injectable()
@@ -12,15 +13,17 @@ export class AppointmentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly patientService: PatientService,
+    private readonly doctorService: DoctorService,
     private readonly paginationService: PaginationService,
   ) {}
   async appointmentsService(
     appointmentDto: CreateAppointmentDto,
-    userId: number,
+    userId: string,
   ) {
+    console.log(userId, appointmentDto);
     // / Find the patient (based on the logged-in user's ID)
     const patient = await this.prisma.patient.findUnique({
-      where: { id: userId },
+      where: { userId: userId },
     });
 
     if (!patient) {
@@ -101,7 +104,7 @@ export class AppointmentsService {
     // Save to DB
     const finalAppointment = await this.prisma.appointment.create({
       data: {
-        patientId: patient.id,
+        patientId: patient?.id,
         doctorId: doctor?.id,
         tranId: tran_id,
         status: 'PENDING',
@@ -120,8 +123,6 @@ export class AppointmentsService {
   }
 
   async appointmentsSuccess(tranId: string) {
-
-
     const appointment = await this.prisma.appointment.update({
       where: {
         tranId: tranId,
@@ -182,30 +183,224 @@ export class AppointmentsService {
       redirectUrl: `http://localhost:3000/appointments/cancel/tranId=${tranId}`,
     };
   }
-
-  async getAllAppointments(
+  // patient appointments
+  async getAllPatientAppointments(
     paginationDto: PaginationDto,
     baseUrl: string,
-    patientId: number,
+    userId: string,
   ) {
-    await this.patientService.findOne(patientId);
     const page = paginationDto.page;
     const limit = paginationDto.limit;
     const skip = (page - 1) * limit;
 
+    const patient = await this.prisma.patient.findUnique({
+      where: { userId: userId },
+    });
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
     const [data, total] = await this.prisma.$transaction([
       this.prisma.appointment.findMany({
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
         where: {
-          patientId: patientId,
+          patientId: patient.id,
+        },
+        include: {
+          doctor: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  age: true,
+                  gender: true,
+                  createdAt: true,
+                },
+              },
+            },
+          },
         },
       }),
 
       this.prisma.appointment.count({
         where: {
-          patientId: patientId,
+          patientId: patient.id,
+        },
+      }),
+    ]);
+
+    const meta = this.paginationService.buildPaginationMeta(
+      baseUrl,
+      page,
+      limit,
+      total,
+    );
+
+    return { ...meta, results: data };
+  }
+  async getAllPatientPaidAppointments(
+    paginationDto: PaginationDto,
+    baseUrl: string,
+    userId: string,
+  ) {
+    const page = paginationDto.page;
+    const limit = paginationDto.limit;
+    const skip = (page - 1) * limit;
+
+    const patient = await this.prisma.patient.findUnique({
+      where: { userId: userId },
+    });
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.appointment.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        where: {
+          patientId: patient.id,
+          status: 'PAID',
+        },
+        include: {
+          doctor: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  age: true,
+                  gender: true,
+                  createdAt: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+
+      this.prisma.appointment.count({
+        where: {
+          patientId: patient.id,
+          status: 'PAID',
+        },
+      }),
+    ]);
+
+    const meta = this.paginationService.buildPaginationMeta(
+      baseUrl,
+      page,
+      limit,
+      total,
+    );
+
+    return { ...meta, results: data };
+  }
+  // doctor appointments
+  async getAllDoctorAppointments(
+    paginationDto: PaginationDto,
+    baseUrl: string,
+    userId: string,
+  ) {
+    const page = paginationDto.page;
+    const limit = paginationDto.limit;
+    const skip = (page - 1) * limit;
+
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { userId: userId },
+    });
+    if (!doctor) {
+      throw new NotFoundException('Doctor not found');
+    }
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.appointment.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        where: {
+          doctorId: doctor.id,
+        },
+        include: {
+          patient: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  age: true,
+                  gender: true,
+                  createdAt: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+
+      this.prisma.appointment.count({
+        where: {
+          doctorId: doctor.id,
+        },
+      }),
+    ]);
+
+    const meta = this.paginationService.buildPaginationMeta(
+      baseUrl,
+      page,
+      limit,
+      total,
+    );
+
+    return { ...meta, results: data };
+  }
+  async getAllDoctorPaidAppointments(
+    paginationDto: PaginationDto,
+    baseUrl: string,
+    userId: string,
+  ) {
+    const page = paginationDto.page;
+    const limit = paginationDto.limit;
+    const skip = (page - 1) * limit;
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { userId: userId },
+    });
+    if (!doctor) {
+      throw new NotFoundException('Doctor not found');
+    }
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.appointment.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        where: {
+          doctorId: doctor.id,
+          status: 'PAID',
+        },
+        include: {
+          patient: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  age: true,
+                  gender: true,
+                  createdAt: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+
+      this.prisma.appointment.count({
+        where: {
+          doctorId: doctor.id,
+          status: 'PAID',
         },
       }),
     ]);

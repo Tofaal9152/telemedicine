@@ -9,13 +9,13 @@ export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
   @Get('profile')
-  getPatientInfo(@Request() req: { user: { id: number } }) {
+  getPatientInfo(@Request() req: { user: { id: string } }) {
     return this.doctorService.getProfile(req.user.id);
   }
 
   @Patch('profile')
   updatePatientInfo(
-    @Request() req: { user: { id: number } },
+    @Request() req: { user: { id: string } },
     @Body() updatePatientDto: UpdateDoctorDto,
   ) {
     return this.doctorService.updateProfile(req.user.id, updatePatientDto);

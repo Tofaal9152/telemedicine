@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   ParseBoolPipe,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -33,12 +32,12 @@ export class AdminController {
   }
 
   @Get('patient/:id')
-  findOnePatient(@Param('id', ParseIntPipe) id: number) {
+  findOnePatient(@Param('id') id: string) {
     return this.adminService.findOnePatient(id);
   }
   //  remove patient
   @Delete('patient/:id')
-  removePatient(@Param('id', ParseIntPipe) id: number) {
+  removePatient(@Param('id') id: string) {
     return this.adminService.removePatient(id);
   }
 
@@ -57,19 +56,19 @@ export class AdminController {
   }
 
   @Get('doctor/:id')
-  findOneDoctor(@Param('id', ParseIntPipe) id: number) {
+  findOneDoctor(@Param('id') id: string) {
     return this.adminService.findOneDoctor(id);
   }
 
   @Delete('doctor/:id')
-  removeDoctor(@Param('id', ParseIntPipe) id: number) {
+  removeDoctor(@Param('id') id: string) {
     return this.adminService.removeDoctor(id);
   }
 
   // Approve doctor
   @Patch('doctor/:id/approval')
   approveDoctor(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body('isApproved', ParseBoolPipe) isApproved: boolean,
   ) {
     return this.adminService.setApproval(id, isApproved);

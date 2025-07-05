@@ -1,4 +1,4 @@
-import { CreditCard, Home, LayoutDashboard, PlusCircleIcon, Settings, User } from "lucide-react";
+import { CreditCard, Home, LayoutDashboard, PlusCircleIcon, Search, Settings, User } from "lucide-react";
 
 export const NavbarNavItems = (session: any) => {
   return {
@@ -18,9 +18,9 @@ export const NavbarNavItems = (session: any) => {
           ]
         : []),
       {
-        name: "Profile",
-        link: "/profile",
-        icon: <User size={18} />,
+        name: "Search",
+        link: "/search",
+        icon: <Search size={18} />,
       },
       {
         name: "Payments",

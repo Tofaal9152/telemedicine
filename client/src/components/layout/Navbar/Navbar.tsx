@@ -1,6 +1,6 @@
 import SignButton from "@/components/pages/auth/SignButton";
 import CustomImage from "@/components/ui/Image";
-import ModeToggle from "@/components/ui/ModeToggle";
+// import ModeToggle from "@/components/ui/ModeToggle";
 import imagePath from "@/constants/imagePath";
 import { NavbarNavItems } from "@/constants/navitems";
 import { getSession } from "@/lib/session";
@@ -55,7 +55,7 @@ const Navbar = async () => {
 
           {/* Right side actions */}
           <div className="flex items-center space-x-3">
-            <ModeToggle />
+            {/* <ModeToggle /> */}
             <SignButton />
           </div>
         </div>

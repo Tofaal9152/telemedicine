@@ -16,7 +16,33 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-
+// {
+//     "count": 1,
+//     "totalPages": 1,
+//     "currentPage": 1,
+//     "pageSize": 10,
+//     "next": null,
+//     "previous": null,
+//     "results": [
+//         {
+//             "id": "cmcqeztom0001omn12nvguaiz",
+//             "patientId": "cmcqck6l40000omy91cosu881",
+//             "doctorId": "cmcqcxx8j0004om2qh92orzc9",
+//             "tranId": "241d2b2a-807e-4a11-a25f-a8cd78b4f590",
+//             "status": "PAID",
+//             "createdAt": "2025-07-05T15:45:04.774Z",
+//             "doctor": {
+//                 "id": "cmcqcxx8j0005om2qls8sv5e4",
+//                 "userId": "cmcqcxx8j0004om2qh92orzc9",
+//                 "specialty": "mecha",
+//                 "bio": "hi",
+//                 "experience": "4 years",
+//                 "isApproved": true,
+//                 "visitFee": 1000
+//             }
+//         }
+//     ]
+// }
 const AppointmentSection = ({ role }: { role?: string }) => {
   const appointmentDataDoctor =
     role === "DOCTOR"

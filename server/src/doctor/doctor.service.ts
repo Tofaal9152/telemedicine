@@ -73,15 +73,15 @@ export class DoctorService {
     });
   }
 
-  async getProfile(id: number) {
+  async getProfile(id: string) {
     return await this.findOne(id);
   }
 
-  async updateProfile(id: number, updateDoctorDto: UpdateDoctorDto) {
+  async updateProfile(id: string, updateDoctorDto: UpdateDoctorDto) {
     await this.findOne(id);
     console.log(updateDoctorDto);
     const updatedDoctor = await this.prisma.user.update({
-      where: { id: Number(id) },
+      where: { id: id },
       data: {
         ...updateDoctorDto,
         doctor: {
@@ -141,10 +141,10 @@ export class DoctorService {
     return { ...meta, results: data };
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const doctor = await this.prisma.user.findUnique({
       where: {
-        id: Number(id),
+        id: id,
       },
       include: {
         doctor: true,
@@ -169,12 +169,12 @@ export class DoctorService {
     return doctor;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.findOne(id);
 
     const deleteUser = await this.prisma.user.delete({
       where: {
-        id: Number(id),
+        id: id,
       },
     });
     if (!deleteUser) {
@@ -183,10 +183,10 @@ export class DoctorService {
     return { message: `Doctor with id ${id} removed successfully` };
   }
   // Approve or disapprove a doctor by
-  async setApproval(id: number, isApproved: boolean) {
+  async setApproval(id: string, isApproved: boolean) {
     await this.findOne(id);
     const updatedDoctor = await this.prisma.user.update({
-      where: { id: Number(id) },
+      where: { id },
       data: {
         doctor: {
           update: { isApproved },

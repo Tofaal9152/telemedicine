@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(cuid())
   email              String   @unique
   name               String
   password           String?
@@ -26,8 +26,8 @@ model User {
 }
 
 model Doctor {
-  id         Int     @id @default(autoincrement())
-  userId     Int     @unique
+  id         String  @id @default(cuid())
+  userId     String  @unique
   specialty  String
   bio        String
   experience String
@@ -39,30 +39,30 @@ model Doctor {
 }
 
 model Patient {
-  id     Int @id @default(autoincrement())
-  userId Int @unique
+  id     String @id @default(cuid())
+  userId String @unique
 
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   Appointment Appointment[]
 }
 
 model Admin {
-  id     Int @id @default(autoincrement())
-  userId Int @unique
+  id     String @id @default(cuid())
+  userId String @unique
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Appointment {
-  id        Int               @id @default(autoincrement())
-  patientId Int
-  doctorId  Int
+  id        String            @id @default(cuid())
+  patientId String
+  doctorId  String
   tranId    String?           @unique
   status    AppointmentStatus
   createdAt DateTime          @default(now())
 
-  patient Patient @relation(fields: [patientId], references: [id])
-  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

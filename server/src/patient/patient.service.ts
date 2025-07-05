@@ -35,15 +35,15 @@ export class PatientService {
     });
   }
 
-  async getProfile(id: number) {
+  async getProfile(id: string) {
     return await this.findOne(id);
   }
 
-  async updateProfile(id: number, updatePatientDto: UpdatePatientDto) {
+  async updateProfile(id: string, updatePatientDto: UpdatePatientDto) {
     await this.findOne(id);
 
     const updatedPatient = await this.prisma.user.update({
-      where: { id: Number(id) },
+      where: { id },
       data: {
         ...updatePatientDto,
       },
@@ -90,10 +90,10 @@ export class PatientService {
     return { ...meta, results: data };
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const patient = await this.prisma.user.findUnique({
       where: {
-        id: Number(id),
+        id: id,
       },
       include: {
         patient: true,
@@ -105,12 +105,12 @@ export class PatientService {
     return sanitizeUser(patient);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.findOne(id);
 
     const deleteUser = await this.prisma.user.delete({
       where: {
-        id: Number(id),
+        id: id,
       },
     });
     if (!deleteUser) {

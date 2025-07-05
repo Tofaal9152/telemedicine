@@ -22,6 +22,7 @@ export function InfiniteScroller<T>({
   isLoading,
   isError,
   error,
+
   renderItem,
 }: InfiniteScrollerProps<T>) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -47,7 +48,9 @@ export function InfiniteScroller<T>({
   }, [onIntersect]);
 
   if (isLoading) {
-    return <Loader className="w-8 h-8 animate-spin mx-auto my-4 text-gray-500" />;
+    return (
+      <Loader className="w-8 h-8 animate-spin mx-auto my-4 text-gray-500" />
+    );
   }
 
   if (isError) {
@@ -68,7 +71,7 @@ export function InfiniteScroller<T>({
         {isFetchingNextPage && (
           <Loader className="w-8 h-8 animate-spin mx-auto text-gray-500" />
         )}
-        {!hasNextPage && <p className="text-gray-500">No more items</p>}
+        {!hasNextPage && <p className="text-white">No more items</p>}
       </div>
     </>
   );

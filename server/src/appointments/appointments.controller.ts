@@ -25,7 +25,7 @@ export class AppointmentsController {
   @Post('payment')
   createAppointment(
     @Body() appointmentDto: CreateAppointmentDto,
-    @Request() req: { user: { id: number } },
+    @Request() req: { user: { id: string } },
   ) {
     return this.appointmentsService.appointmentsService(
       appointmentDto,
@@ -65,15 +65,62 @@ export class AppointmentsController {
 
   // get all appointments of a patient
   @Roles('PATIENT')
-  @Get('all')
-  async getAllAppointments(
+  @Get('patient/all')
+  async getAllPatientAppointments(
     @Query() paginationDto: PaginationDto,
-    @Request() req: { user: { id: number } },
+    @Request() req: { user: { id: string } },
 
     @Req() request: expressRequest,
   ) {
     const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
-    return this.appointmentsService.getAllAppointments(
+    return this.appointmentsService.getAllPatientAppointments(
+      paginationDto,
+      baseUrl,
+      req.user.id,
+    );
+  }
+  @Roles('PATIENT')
+  @Get('patient/paid')
+  async getAllPatientPaidAppointments(
+    @Query() paginationDto: PaginationDto,
+    @Request() req: { user: { id: string } },
+
+    @Req() request: expressRequest,
+  ) {
+    const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
+
+    return this.appointmentsService.getAllPatientPaidAppointments(
+      paginationDto,
+      baseUrl,
+      req.user.id,
+    );
+  }
+  // get all appointments of a doctor
+  @Roles('DOCTOR')
+  @Get('doctor/all')
+  async getAllDoctorAppointments(
+    @Query() paginationDto: PaginationDto,
+    @Request() req: { user: { id: string } },
+
+    @Req() request: expressRequest,
+  ) {
+    const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
+    return this.appointmentsService.getAllDoctorAppointments(
+      paginationDto,
+      baseUrl,
+      req.user.id,
+    );
+  }
+  @Roles('DOCTOR')
+  @Get('doctor/paid')
+  async getAllDoctorPaidAppointments(
+    @Query() paginationDto: PaginationDto,
+    @Request() req: { user: { id: string } },
+
+    @Req() request: expressRequest,
+  ) {
+    const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
+    return this.appointmentsService.getAllDoctorPaidAppointments(
       paginationDto,
       baseUrl,
       req.user.id,

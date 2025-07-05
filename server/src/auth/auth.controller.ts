@@ -23,7 +23,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post('signup')
+  @Post('admin/signup')
   signup(@Body() dto: CreateUserDto) {
     return this.authService.signup(dto);
   }
@@ -45,7 +45,7 @@ export class AuthController {
   signin(
     @Request()
     req: {
-      user: { id: number; name: string; email: string; role: Role };
+      user: { id: string; name: string; email: string; role: Role };
     },
   ) {
     return this.authService.signin(
@@ -59,7 +59,7 @@ export class AuthController {
   @Public()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  refresh(@Request() req: { user: { id: number } }) {
+  refresh(@Request() req: { user: { id: string } }) {
     return this.authService.refreshToken(req.user.id);
   }
 
@@ -73,7 +73,7 @@ export class AuthController {
   @Get('callback/google')
   async googleCallback(
     @Request()
-    req: { user: { id: number; name: string; email: string; role: Role } },
+    req: { user: { id: string; name: string; email: string; role: Role } },
     @Res() resopnse: Response,
   ) {
     const res = await this.authService.signin(
@@ -88,7 +88,7 @@ export class AuthController {
   }
 
   @Post('signout')
-  signOut(@Req() req: { user: { id: number } }) {
+  signOut(@Req() req: { user: { id: string } }) {
     return this.authService.signOut(req.user.id);
   }
 }

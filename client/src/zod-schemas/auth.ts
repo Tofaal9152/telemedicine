@@ -25,4 +25,5 @@ export const DoctorRegisterSchema = z.object({
   specialty: z.string().min(1, "Please enter a valid specialty"),
   experience: z.string().min(1, "Please enter a valid experience"),
   bio: z.string().min(1, "Please enter a valid bio"),
+  visitFee: z.string().min(1, "Please enter a valid visit fee"),
 });
