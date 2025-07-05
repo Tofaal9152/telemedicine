@@ -17,6 +17,7 @@ import { CreateGooleUserDto } from 'src/user/dto/create-google.dto';
 import { UserService } from 'src/user/user.service';
 import refreshConfig from './config/refresh.config';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -29,25 +30,24 @@ export class AuthService {
     private refreshTokenConfig: ConfigType<typeof refreshConfig>,
   ) {}
   // Sign up method
-  // async signup(dto: CreateUserDto) {
+  async signup(dto: CreateUserDto) {
+    if (dto.password.length < 6) {
+      throw new ConflictException('Password must be at least 6 characters!');
+    }
+    const user = await this.userService.findByEmail(dto.email);
 
-  //   if (dto.password.length < 6) {
-  //     throw new ConflictException('Password must be at least 6 characters!');
-  //   }
-  //   const user = await this.userService.findByEmail(dto.email);
-
-  //   if (user) {
-  //     throw new ConflictException('User already exists!');
-  //   }
-  //   const newUser = await this.userService.create(dto);
-  //   if (!newUser) {
-  //     throw new ConflictException('User creation failed!');
-  //   }
-  //   return {
-  //     message: 'User created successfully!',
-  //     user : sanitizeUser(newUser),
-  //   };
-  // }
+    if (user) {
+      throw new ConflictException('User already exists!');
+    }
+    const newUser = await this.userService.create(dto);
+    if (!newUser) {
+      throw new ConflictException('User creation failed!');
+    }
+    return {
+      message: 'User created successfully!',
+      user: sanitizeUser(newUser),
+    };
+  }
   // Sign up method for doctor
   async signupDoctor(createDoctorDto: CreateDoctorDto) {
     if (createDoctorDto.password.length < 6) {

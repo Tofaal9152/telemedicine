@@ -16,16 +16,17 @@ import { CreatePatientDto } from 'src/patient/dto/create-patient.dto';
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
 import { GoogleAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './guards';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Public()
-  // @Post('signup')
-  // signup(@Body() dto: CreateUserDto) {
-  //   return this.authService.signup(dto);
-  // }
+  @Public()
+  @Post('signup')
+  signup(@Body() dto: CreateUserDto) {
+    return this.authService.signup(dto);
+  }
   @Public()
   @Post('doctor/signup')
   signupDoctor(@Body() createDoctorDto: CreateDoctorDto) {

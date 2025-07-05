@@ -10,6 +10,7 @@ import { DoctorModule } from './doctor/doctor.module';
 import { PatientModule } from './patient/patient.module';
 import { CommonModule } from './common/common.module';
 import { PublicModule } from './public/public.module';
+import { AppointmentsModule } from './appointments/appointments.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PublicModule } from './public/public.module';
     PatientModule,
     CommonModule,
     PublicModule,
+    AppointmentsModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],

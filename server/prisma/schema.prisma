@@ -32,15 +32,18 @@ model Doctor {
   bio        String
   experience String
   isApproved Boolean @default(false)
+  visitFee   Float   @default(500)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Appointment Appointment[]
 }
 
 model Patient {
   id     Int @id @default(autoincrement())
   userId Int @unique
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Appointment Appointment[]
 }
 
 model Admin {
@@ -48,6 +51,18 @@ model Admin {
   userId Int @unique
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  tranId    String?           @unique
+  status    AppointmentStatus
+  createdAt DateTime          @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
 }
 
 enum Role {
@@ -59,4 +74,11 @@ enum Role {
 enum Gender {
   male
   female
+}
+
+enum AppointmentStatus {
+  PAID
+  PENDING
+  FAILED
+  CANCELED
 }

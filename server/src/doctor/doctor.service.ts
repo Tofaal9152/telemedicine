@@ -32,6 +32,7 @@ export class DoctorService {
         role: 'DOCTOR',
         doctor: {
           create: {
+            visitFee: user.visitFee,
             bio: user.bio,
             specialty: user.specialty,
             experience: user.experience,
@@ -58,6 +59,7 @@ export class DoctorService {
         role: 'DOCTOR',
         doctor: {
           create: {
+            visitFee: user.visitFee,
             bio: user.bio,
             specialty: user.specialty,
             experience: user.experience,
@@ -197,6 +199,7 @@ export class DoctorService {
   }
   // Get all approved doctors
   async findApprovedDoctors(
+    query: string,
     page: number,
     skip: number,
     limit: number,
@@ -210,6 +213,14 @@ export class DoctorService {
         where: {
           role: 'DOCTOR',
           doctor: { isApproved: true },
+          ...(query && {
+            OR: [
+              { name: { contains: query } },
+              {
+                doctor: { specialty: { contains: query } },
+              },
+            ],
+          }),
         },
         select: {
           id: true,
@@ -234,6 +245,14 @@ export class DoctorService {
         where: {
           role: 'DOCTOR',
           doctor: { isApproved: true },
+          ...(query && {
+            OR: [
+              { name: { contains: query } },
+              {
+                doctor: { specialty: { contains: query } },
+              },
+            ],
+          }),
         },
       }),
     ]);
