@@ -1,4 +1,4 @@
-import AppointmentSection from "@/components/pages/landing-page/AppointmentSection";
+import AppointmentSection from "@/components/pages/landing-page/hero-appointment/AppointmentSection";
 import HeroSection from "@/components/pages/landing-page/HeroSection";
 import { getSession } from "@/lib/session";
 

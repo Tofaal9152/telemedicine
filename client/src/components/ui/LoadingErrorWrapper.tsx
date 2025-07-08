@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader } from "lucide-react";
 import React from "react";
 
 type LoadingErrorWrapperProps = {
@@ -20,7 +21,7 @@ const LoadingErrorWrapper: React.FC<LoadingErrorWrapperProps> = ({
   children,
 }) => {
   if (isLoading) {
-    return <p className="text-center text-gray-500 mt-4">Loading...</p>;
+    return <p className="text-center flex items-center justify-center text-white mt-4"><Loader className="animate-spin" /></p>;
   }
 
   if (isError) {
