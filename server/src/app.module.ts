@@ -11,6 +11,8 @@ import { PatientModule } from './patient/patient.module';
 import { CommonModule } from './common/common.module';
 import { PublicModule } from './public/public.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { PrescriptionModule } from './prescription/prescription.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { AppointmentsModule } from './appointments/appointments.module';
     CommonModule,
     PublicModule,
     AppointmentsModule,
+    PrescriptionModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],

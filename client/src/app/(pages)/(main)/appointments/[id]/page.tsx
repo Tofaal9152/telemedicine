@@ -7,7 +7,13 @@ const page = async ({ params }: PageProps) => {
   const session: any = await getSession();
   const isDoctor = session?.user?.role === "DOCTOR";
 
-  return <AppointmentsPage session={session} appointmentId={id}  isDoctor={isDoctor}/>;
+  return (
+    <AppointmentsPage
+      session={session}
+      appointmentId={id}
+      isDoctor={isDoctor}
+    />
+  );
 };
 
 export default page;

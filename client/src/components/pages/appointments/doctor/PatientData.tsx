@@ -1,9 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar, Mail, MessageCircle, User, Users, Video } from "lucide-react";
+import {
+  Calendar,
+  Mail,
+  MessageCircle,
+  User,
+  Users,
+  Video,
+} from "lucide-react";
 import DoctorPrescriptionContent from "../prescription/DoctorPrescriptionContent";
-const PatientData = ({ data }: any) => {
+const PatientData = ({
+  data,
+  appointmentId,
+}: {
+  data: any;
+  appointmentId: string;
+}) => {
   const patient = data?.patient?.user;
 
   if (!patient) return <div>No patient info available.</div>;
@@ -57,7 +70,9 @@ const PatientData = ({ data }: any) => {
           <Video className="w-5 h-5" />
           Video Call
         </Button>
-        <DoctorPrescriptionContent />
+        {/*  */}
+
+        <DoctorPrescriptionContent data={data} appointmentId={appointmentId} />
       </div>
 
       <style jsx>{`

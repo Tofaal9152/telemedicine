@@ -1,26 +1,37 @@
 "use client";
-import { CreatePrescriptionAction } from "@/actions/prescription/create-prescription";
+import { EditPrescriptionAction } from "@/actions/prescription/create-prescription";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const DoctorPrescriptionForm = ({
-  data,
+const DoctorPrescriptionEditForm = ({
+  prescriptionData,
   appointmentId,
 }: {
-  data: any;
+  prescriptionData: any;
   appointmentId: string;
 }) => {
-  const mutation = CreatePrescriptionAction(["prescription", appointmentId]);
-  const [symptoms, setSymptoms] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const [notes, setNotes] = useState("");
+  const mutation = EditPrescriptionAction({
+    prescriptionId: prescriptionData?.id,
+    queryKey: ["prescription", appointmentId],
+  });
+
+  const [symptoms, setSymptoms] = useState(prescriptionData?.symptoms || "");
+  const [diagnosis, setDiagnosis] = useState(prescriptionData?.diagnosis || "");
+  const [notes, setNotes] = useState(prescriptionData?.notes || "");
 
   const [medications, setMedications] = useState([
     { name: "", dosage: "", frequency: "", duration: "" },
   ]);
+
+  // ✅ Load medications from prescriptionData once
+  useEffect(() => {
+    if (prescriptionData?.medications?.length) {
+      setMedications(prescriptionData.medications);
+    }
+  }, [prescriptionData]);
 
   const addMedication = () => {
     setMedications([
@@ -28,22 +39,23 @@ const DoctorPrescriptionForm = ({
       { name: "", dosage: "", frequency: "", duration: "" },
     ]);
   };
+
   const handleMedicationChange = (
     index: number,
     field: string,
     value: string
   ) => {
-    const updatedMeds = [...medications];
-    updatedMeds[index][field as keyof (typeof updatedMeds)[0]] = value;
-    setMedications(updatedMeds);
+    setMedications((prev) =>
+      prev.map((med, i) => (i === index ? { ...med, [field]: value } : med))
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate({
       appointmentId,
-      patientId: data?.patientId,
-      doctorId: data?.doctorId,
+      patientId: prescriptionData?.patientId,
+      doctorId: prescriptionData?.doctorId,
       symptoms,
       diagnosis,
       medications: medications.filter(
@@ -68,7 +80,7 @@ const DoctorPrescriptionForm = ({
         className="w-full p-4 rounded-lg border"
       />
 
-      {/* Dynamic Medication List */}
+      {/* ✅ Render dynamic medication fields from state */}
       <div className="space-y-4">
         {medications.map((med, index) => (
           <div key={index} className="grid grid-cols-4 gap-2">
@@ -118,12 +130,12 @@ const DoctorPrescriptionForm = ({
         className="w-full p-4 rounded-lg border"
       />
       <DialogClose asChild>
-        <Button type="submit" variant="outline">
-          Save Prescription
+        <Button type="submit" variant="outline" disabled={mutation.isPending}>
+          {mutation.isPending ? "Saving..." : "Save Prescription"}
         </Button>
       </DialogClose>
     </form>
   );
 };
 
-export default DoctorPrescriptionForm;
+export default DoctorPrescriptionEditForm;

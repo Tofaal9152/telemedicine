@@ -1,40 +1,45 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import LoadingErrorWrapper from "@/components/ui/LoadingErrorWrapper";
+import ApiDeleteButton from "@/hooks/ApiDeleteButton";
 import { useFetchData } from "@/hooks/useFetchData";
 import { formatDate } from "@/lib/DateConverter";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-const AllPrescription = ({ appointmentId }: { appointmentId: string }) => {
-  const { data, isPending, error, isError } = useFetchData<any>(
+import DoctorPrescriptionEditContent from "./DoctorPrescriptionEditContent";
+const Prescription = ({
+  appointmentId,
+  session,
+}: {
+  appointmentId: string;
+  session: any;
+}) => {
+  const { data: prescriptionData, isPending, error, isError } = useFetchData<any>(
     `/prescription/appointment/${appointmentId}`,
     ["prescription", appointmentId]
   );
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
-
-  if (isPending) return <div></div>;
-  if (isError)
-    return (
-      <p className="text-red-500">
-        Failed to load prescription data.
-        {error instanceof Error ? ` ${error.message}` : ""}
-      </p>
-    );
-
+const data = prescriptionData?.result;
   return (
-    <div className="my-8">
+    <LoadingErrorWrapper
+      isLoading={isPending}
+      error={error}
+      isError={isError}
+      isEmpty={data === null}
+    >
       <div
         ref={contentRef}
-        className="bg-white text-black p-12 rounded shadow max-w-3xl mx-auto min-h-screen "
+        className="bg-white text-black p-12 rounded shadow-sm max-w-3xl mx-auto min-h-screen my-4 border"
       >
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-4 mb-4">
           <div>
             <h1 className="text-2xl font-bold text-blue-800">
-              HealthCare Clinic
+             Telemedicine Prescription
             </h1>
-            <p className="text-sm text-gray-600">123 Main Street, Rajshahi</p>
+            <p className="text-sm text-gray-600">Telemedicine, Bangladesh</p>
             <p className="text-sm text-gray-600">Phone: +880 123-456-789</p>
           </div>
           <div className="text-right">
@@ -119,14 +124,31 @@ const AllPrescription = ({ appointmentId }: { appointmentId: string }) => {
           <p className="text-sm">Doctor&apos;s Signature</p>
         </div>
       </div>
-      <Button
-        onClick={reactToPrintFn}
-        className="px-4 py-2 mt-4 bg-green-600 text-white rounded hover:bg-green-700 w-full flex items-center justify-center gap-2 border"
-      >
-        Download as PDF
-      </Button>
-    </div>
+      <div className="flex flex-wrap justify-end gap-4 pt-4 mt-4 border-t-4">
+        <Button
+          onClick={reactToPrintFn}
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold "
+        >
+          Download as PDF
+        </Button>
+        {session?.user?.role === "DOCTOR" && (
+          <>
+            <DoctorPrescriptionEditContent
+              prescriptionData={data}
+              appointmentId={appointmentId}
+            />
+            <ApiDeleteButton
+              endPoint={`/prescription/${data?.id}`}
+              queryKey={["prescription", appointmentId]}
+              confirmMessage="Are you sure you want to delete this prescription?"
+              successMessage="Prescription deleted successfully."
+              errorMessage="Failed to delete prescription."
+            />
+          </>
+        )}
+      </div>
+    </LoadingErrorWrapper>
   );
 };
 
-export default AllPrescription;
+export default Prescription;

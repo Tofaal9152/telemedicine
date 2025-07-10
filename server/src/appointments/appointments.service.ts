@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PatientService } from 'src/patient/patient.service';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginationService } from 'src/common/services/pagination.service';
-import { DoctorService } from 'src/doctor/doctor.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const SSLCommerzPayment = require('sslcommerz-lts');
 @Injectable()
 export class AppointmentsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly patientService: PatientService,
-    private readonly doctorService: DoctorService,
     private readonly paginationService: PaginationService,
   ) {}
   async appointmentsService(
@@ -413,5 +409,44 @@ export class AppointmentsService {
     );
 
     return { ...meta, results: data };
+  }
+  // appointment details
+  async getAppointmentDetails(appointmentId: string, userId: string) {
+    const appointment = await this.prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      include: {
+        patient: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                age: true,
+                gender: true,
+              },
+            },
+          },
+        },
+        doctor: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                age: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found');
+    }
+
+    return appointment;
   }
 }

@@ -66,7 +66,7 @@ export class AppointmentsController {
   // get all appointments of a patient
   @Roles('PATIENT')
   @Get('patient/all')
-  async getAllPatientAppointments(
+  getAllPatientAppointments(
     @Query() paginationDto: PaginationDto,
     @Request() req: { user: { id: string } },
 
@@ -81,7 +81,7 @@ export class AppointmentsController {
   }
   @Roles('PATIENT')
   @Get('patient/paid')
-  async getAllPatientPaidAppointments(
+  getAllPatientPaidAppointments(
     @Query() paginationDto: PaginationDto,
     @Request() req: { user: { id: string } },
 
@@ -98,7 +98,7 @@ export class AppointmentsController {
   // get all appointments of a doctor
   @Roles('DOCTOR')
   @Get('doctor/all')
-  async getAllDoctorAppointments(
+  getAllDoctorAppointments(
     @Query() paginationDto: PaginationDto,
     @Request() req: { user: { id: string } },
 
@@ -113,7 +113,7 @@ export class AppointmentsController {
   }
   @Roles('DOCTOR')
   @Get('doctor/paid')
-  async getAllDoctorPaidAppointments(
+  getAllDoctorPaidAppointments(
     @Query() paginationDto: PaginationDto,
     @Request() req: { user: { id: string } },
 
@@ -125,5 +125,15 @@ export class AppointmentsController {
       baseUrl,
       req.user.id,
     );
+  }
+
+  // appointment details
+  @Roles('PATIENT', 'DOCTOR')
+  @Get(':id')
+  async getAppointmentDetails(
+    @Param('id') id: string,
+    @Request() req: { user: { id: string } },
+  ) {
+    return this.appointmentsService.getAppointmentDetails(id, req.user.id);
   }
 }

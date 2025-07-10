@@ -1,11 +1,19 @@
 "use client";
 import LoadingErrorWrapper from "@/components/ui/LoadingErrorWrapper";
 import { useFetchData } from "@/hooks/useFetchData";
-import PatientData from "./doctor/PatientData";
-import DoctorData from "./patient/DoctorData";
-import AllPrescription from "./prescription/AllPrescription";
+import DoctorData from "./doctor/PatientData";
+import PatientData from "./patient/DoctorData";
+import Prescription from "./prescription/Prescription";
 
-const AppointmentsPage = ({ appointmentId, isDoctor }: any) => {
+const AppointmentsPage = ({
+  appointmentId,
+  isDoctor,
+  session,
+}: {
+  appointmentId: string;
+  isDoctor: boolean;
+  session: any;
+}) => {
   const { data, isPending, error, isError } = useFetchData<any>(
     `/appointments/${appointmentId}`,
     ["appointment", appointmentId]
@@ -13,8 +21,12 @@ const AppointmentsPage = ({ appointmentId, isDoctor }: any) => {
 
   return (
     <LoadingErrorWrapper isLoading={isPending} error={error} isError={isError}>
-      {isDoctor ? <PatientData data={data} /> : <DoctorData data={data} />}
-      <AllPrescription appointmentId={appointmentId} />
+      {isDoctor ? (
+        <DoctorData data={data} appointmentId={appointmentId} />
+      ) : (
+        <PatientData data={data} />
+      )}
+      <Prescription appointmentId={appointmentId} session={session} />
     </LoadingErrorWrapper>
   );
 };
