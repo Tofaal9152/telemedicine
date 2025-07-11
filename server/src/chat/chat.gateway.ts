@@ -8,10 +8,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { Request } from '@nestjs/common';
-import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Roles('DOCTOR', 'PATIENT')
 @WebSocketGateway({ cors: true })
