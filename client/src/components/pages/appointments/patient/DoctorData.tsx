@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Award, Calendar, Mail, MessageCircle, User, Users, Video } from "lucide-react";
+import { Award, Calendar, Mail, User, Users } from "lucide-react";
 
 const DoctorData = ({ data }: any) => {
   const doctor = data?.doctor;
@@ -67,16 +66,7 @@ const DoctorData = ({ data }: any) => {
           </div>
         )}
       </div>
-      <div className="flex gap-4 mt-8">
-        <Button className="flex items-center gap-2 px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition duration-300">
-          <MessageCircle className="w-5 h-5" />
-          Message
-        </Button>
-        <Button className="flex items-center gap-2 px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md transition duration-300">
-          <Video className="w-5 h-5" />
-          Video Call
-        </Button>
-      </div>
+     
       <style jsx>{`
         @keyframes fade-in {
           from {

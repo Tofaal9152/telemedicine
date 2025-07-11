@@ -23,6 +23,7 @@ model User {
   doctor  Doctor?
   patient Patient?
   admin   Admin?
+  Message Message[]
 }
 
 model Doctor {
@@ -37,6 +38,7 @@ model Doctor {
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Appointment  Appointment[]
   Prescription Prescription[]
+  Message      Message[]
 }
 
 model Patient {
@@ -46,6 +48,7 @@ model Patient {
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Appointment  Appointment[]
   Prescription Prescription[]
+  Message      Message[]
 }
 
 model Admin {
@@ -79,9 +82,23 @@ model Prescription {
 
   symptoms    String
   diagnosis   String
-  medications Json 
+  medications Json
   notes       String?
   createdAt   DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  timestamp DateTime @default(now())
+
+  userId    String
+  doctorId  String
+  patientId String
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

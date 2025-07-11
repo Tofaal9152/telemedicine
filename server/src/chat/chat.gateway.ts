@@ -1,20 +1,25 @@
 import {
-  WebSocketGateway,
-  SubscribeMessage,
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  SubscribeMessage,
+  WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
-import { Socket, Server } from 'socket.io';
+import { Request } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
-@WebSocketGateway()
+@Roles('DOCTOR', 'PATIENT')
+@WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly chatService: ChatService) {}
   @WebSocketServer() server: Server;
+
+  constructor(private chatService: ChatService) {}
+
   handleConnection(client: Socket) {
     console.log('Client connected:', client.id);
   }
@@ -23,28 +28,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Client disconnected:', client.id);
   }
 
-  @SubscribeMessage('messageChat')
-  handleMessage(@MessageBody() createChatDto: any) {
-    console.log('Received message:', createChatDto);
-  }
-  @SubscribeMessage('socket-client')
-  handleUsingSocket(client: Socket) {
-    this.server.emit('socket-server', 'Hello from servesdfsdfr');
-    client.emit('socket-server', `Hello from server`);
-  }
-
-  @SubscribeMessage('findOneChat')
-  findOne(@MessageBody() id: number) {
-    return this.chatService.findOne(id);
+  @SubscribeMessage('joinRoom')
+  async handleJoinRoom(
+    @MessageBody() data: { room: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const room = data.room;
+    await client.join(room);
+    console.log(`Client ${client.id} joined room ${room}`);
   }
 
-  @SubscribeMessage('updateChat')
-  update(@MessageBody() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(updateChatDto.id, updateChatDto);
-  }
+  @SubscribeMessage('createMessage')
+  async handleNewMessage(@MessageBody() createChatDto: CreateChatDto) {
+    console.log(createChatDto);
 
-  @SubscribeMessage('removeChat')
-  remove(@MessageBody() id: number) {
-    return this.chatService.remove(id);
+    const room = `room-${createChatDto?.doctorId}-${createChatDto?.patientId}`;
+
+    const savedMessage = await this.chatService.saveMessage(createChatDto);
+    this.server.to(room).emit('onMessage', savedMessage);
   }
 }

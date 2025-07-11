@@ -32,6 +32,7 @@ export class DoctorService {
         role: 'DOCTOR',
         doctor: {
           create: {
+            isApproved:true,
             visitFee: user.visitFee,
             bio: user.bio,
             specialty: user.specialty,

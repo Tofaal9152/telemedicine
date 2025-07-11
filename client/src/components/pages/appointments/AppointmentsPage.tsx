@@ -1,10 +1,12 @@
 "use client";
 import LoadingErrorWrapper from "@/components/ui/LoadingErrorWrapper";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFetchData } from "@/hooks/useFetchData";
+import { MessageCircle, User, Video } from "lucide-react";
 import DoctorData from "./doctor/PatientData";
 import PatientData from "./patient/DoctorData";
 import Prescription from "./prescription/Prescription";
-
+import Chat from "./chat/Chat";
 const AppointmentsPage = ({
   appointmentId,
   isDoctor,
@@ -21,11 +23,40 @@ const AppointmentsPage = ({
 
   return (
     <LoadingErrorWrapper isLoading={isPending} error={error} isError={isError}>
-      {isDoctor ? (
-        <DoctorData data={data} appointmentId={appointmentId} />
-      ) : (
-        <PatientData data={data} />
-      )}
+      <Tabs defaultValue="profile" className="flex flex-col min-h-[70vh]">
+        <TabsList className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl  text-white border border-white/20 hover:bg-white/15 transition-all duration-500 hover:shadow-3xl">
+          <TabsTrigger value="profile">
+            <User className="w-5 h-5" />
+            {isDoctor ? "Patient Data" : "Doctor Data"}
+          </TabsTrigger>
+          <TabsTrigger value="chat">
+            <MessageCircle className="w-5 h-5" />
+            Chat
+          </TabsTrigger>
+          <TabsTrigger value="video">
+            <Video className="w-5 h-5" />
+            Video Call
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile" className="flex flex-col flex-1">
+          {isDoctor ? (
+            <DoctorData data={data} appointmentId={appointmentId} />
+          ) : (
+            <PatientData data={data} />
+          )}
+        </TabsContent>
+        <TabsContent
+          value="chat"
+          className="flex flex-col flex-1 h-full overflow-hidden"
+        >
+          <Chat data={data} session={session} />
+        </TabsContent>
+
+        <TabsContent value="video" className="flex flex-col flex-1">
+          Start a video call
+        </TabsContent>
+      </Tabs>
+
       <Prescription appointmentId={appointmentId} session={session} />
     </LoadingErrorWrapper>
   );

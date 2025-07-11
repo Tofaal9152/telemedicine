@@ -1,12 +1,24 @@
+import { IsNotEmpty, IsString } from "class-validator";
+
 export class CreateChatDto {
-    senderId: number;
-    receiverId: number;
-    message: string;
-    timestamp: Date;
-    isRead: boolean;
-    chatType: 'text' | 'image' | 'video' | 'file';
-    attachmentUrl?: string; // Optional field for attachments
-    chatRoomId?: number; // Optional field for chat room ID, if applicable  
+
+
+
+    @IsString()
+    @IsNotEmpty()
+    content: string;
+    
+    @IsString()
+    @IsNotEmpty()
+    userId: string;
+    
+    @IsString()
+    @IsNotEmpty()
+    doctorId: string;
+    
+    @IsString()
+    @IsNotEmpty()
+    patientId: string;
+   
     
 }
-

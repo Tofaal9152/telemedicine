@@ -1,14 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Calendar,
-  Mail,
-  MessageCircle,
-  User,
-  Users,
-  Video,
-} from "lucide-react";
+import { Calendar, Mail, User, Users } from "lucide-react";
 import DoctorPrescriptionContent from "../prescription/DoctorPrescriptionContent";
 const PatientData = ({
   data,
@@ -61,17 +53,7 @@ const PatientData = ({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4 mt-8">
-        <Button className="flex items-center gap-2 px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition duration-300">
-          <MessageCircle className="w-5 h-5" />
-          Message
-        </Button>
-        <Button className="flex items-center gap-2 px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md transition duration-300">
-          <Video className="w-5 h-5" />
-          Video Call
-        </Button>
-        {/*  */}
-
+      <div className="mt-8">
         <DoctorPrescriptionContent data={data} appointmentId={appointmentId} />
       </div>
 
