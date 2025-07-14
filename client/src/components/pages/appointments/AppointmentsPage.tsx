@@ -7,6 +7,7 @@ import DoctorData from "./doctor/PatientData";
 import PatientData from "./patient/DoctorData";
 import Prescription from "./prescription/Prescription";
 import Chat from "./chat/Chat";
+import CallSection from "./call/Call";
 const AppointmentsPage = ({
   appointmentId,
   isDoctor,
@@ -53,7 +54,7 @@ const AppointmentsPage = ({
         </TabsContent>
 
         <TabsContent value="video" className="flex flex-col flex-1">
-          Start a video call
+          <CallSection data={data} session={session} />
         </TabsContent>
       </Tabs>
 

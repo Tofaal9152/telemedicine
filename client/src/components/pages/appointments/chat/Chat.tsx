@@ -4,8 +4,7 @@ import {
   ChatContainer,
   MainContainer,
   Message,
-  MessageInput,
-  MessageList,
+  MessageInput
 } from "@chatscope/chat-ui-kit-react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
@@ -94,7 +93,7 @@ const Chat = ({ data, session }: { data: any; session: any }) => {
     <div style={{ height: "80vh", borderRadius: "12px", overflow: "hidden" }}>
       <MainContainer style={{ height: "100%" }}>
         <ChatContainer>
-          <MessageList>
+          <>
             {messages.map((msg, idx) => (
               <Message
                 key={msg.id || idx}
@@ -109,7 +108,7 @@ const Chat = ({ data, session }: { data: any; session: any }) => {
                 }}
               />
             ))}
-          </MessageList>
+          </ >
 
           <MessageInput
             placeholder="Type message..."

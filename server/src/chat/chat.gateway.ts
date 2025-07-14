@@ -32,9 +32,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: { room: string },
     @ConnectedSocket() client: Socket,
   ) {
-    const room = data.room;
-    await client.join(room);
-    console.log(`Client ${client.id} joined room ${room}`);
+    // after joining the room,you can broadcast messages to that room that a user has joined
+    await client.join(data.room);
   }
 
   @SubscribeMessage('createMessage')
