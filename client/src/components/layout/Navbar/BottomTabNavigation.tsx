@@ -30,7 +30,7 @@ const BottomTabNavigation = ({ navItems }: BottomTabNavigationProps) => {
   return (
     <>
       {/* Bottom Tab Navigation - Mobile Only */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
         {/* Background with blur effect */}
         <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200/20 dark:border-gray-700/20 shadow-lg">
           <div className="flex items-center justify-around h-16">
@@ -82,7 +82,7 @@ const BottomTabNavigation = ({ navItems }: BottomTabNavigationProps) => {
       </div>
 
       {/* Spacer to prevent content from being hidden behind bottom nav */}
-      <div className="h-16 md:hidden" />
+      <div className="h-16 lg:hidden" />
 
       <style jsx>{`
         @keyframes bounce-subtle {

@@ -19,21 +19,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private chatService: ChatService) {}
 
-  handleConnection(client: Socket) {
-    console.log('Client connected:', client.id);
+  handleConnection(socket: Socket) {
+    console.log('Client connected:', socket.id);
   }
 
-  handleDisconnect(client: Socket) {
-    console.log('Client disconnected:', client.id);
+  handleDisconnect(socket: Socket) {
+    console.log('Client disconnected:', socket.id);
   }
 
   @SubscribeMessage('joinRoom')
   async handleJoinRoom(
     @MessageBody() data: { room: string },
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() socket: Socket,
   ) {
     // after joining the room,you can broadcast messages to that room that a user has joined
-    await client.join(data.room);
+    await socket.join(data.room);
   }
 
   @SubscribeMessage('createMessage')

@@ -1,16 +1,11 @@
 "use client";
 
-import { useSocketStore } from "@/store/useSocketStore";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { usePeerStore } from "@/store/peerStore";
-import { Button } from "@/components/ui/button";
+import { useSocketStore } from "@/store/useSocketStore";
+import { useCallback, useEffect } from "react";
+import { toast } from "sonner";
 
-const CallSection = ({ data, session }: { data: any; session: any }) => {
-  // usestate
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [userJoinedMessage, setUserJoinedMessage] = useState("");
+const Call = ({ data, session }: { data: any; session: any }) => {
   // zustand stores
   const socket = useSocketStore((s) => s.socket);
   const offer = usePeerStore((s) => s.offer);
@@ -34,8 +29,6 @@ const CallSection = ({ data, session }: { data: any; session: any }) => {
   // toast the joined user name ,make call offer and send it to the room
   const handleCallOffer = useCallback(
     async (data: any) => {
-      console.log(data);
-      setUserJoinedMessage(data.message);
       toast.success(data.message, {
         duration: 2000,
         position: "top-right",
@@ -54,15 +47,6 @@ const CallSection = ({ data, session }: { data: any; session: any }) => {
     [offer, createOffer, socket]
   );
 
-  // handle call user
-  const handleCallUser = useCallback(async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-    setLocalStream(stream);
-  }, []);
-
   //  handle incoming call offer
   // const handleIncomingCall = useCallback((offer: unknown) => {
   //   toast.success(`Incoming call...`, {
@@ -79,8 +63,9 @@ const CallSection = ({ data, session }: { data: any; session: any }) => {
 
   // Join room when component mounts
   useEffect(() => {
-    if (!socket) return;
-    handleJoinedRoom();
+    if (socket?.connected) {
+      handleJoinedRoom();
+    }
   }, [socket, handleJoinedRoom]);
 
   // Listen for user joining the call and handle offer creation
@@ -91,38 +76,12 @@ const CallSection = ({ data, session }: { data: any; session: any }) => {
       socket.off("userJoined", handleCallOffer);
     };
   }, [socket, offer, createOffer, handleCallOffer]);
-  // // Listen for incoming call offers
-  // useEffect(() => {
-  //   if (!socket) return;
-  //   socket.on("incoming-call", handleIncomingCall);
 
-  //   return () => {
-  //     socket.off("incoming-call", handleIncomingCall);
-  //   };
-  // }, [socket, handleIncomingCall]);
-console.log("localStream", localStream);
   return (
-    <div style={{ height: "80vh", borderRadius: "12px", overflow: "hidden" }}>
-      {userJoinedMessage && (
-        <div className="p-4 bg-green-100 text-green-800">
-          {userJoinedMessage}
-          <Button onClick={handleCallUser}>call</Button>
-        </div>
-      )}
-      {localStream && (
-        <video
-          className="w-full h-full object-cover"
-          autoPlay
-          playsInline
-          ref={(video) => {
-            if (video) {
-              video.srcObject = localStream;
-            }
-          }}
-        />
-      )}
-    </div>
+    <div
+      style={{ height: "80vh", borderRadius: "12px", overflow: "hidden" }}
+    ></div>
   );
 };
 
-export default CallSection;
+export default Call;

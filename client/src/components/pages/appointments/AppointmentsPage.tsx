@@ -3,11 +3,11 @@ import LoadingErrorWrapper from "@/components/ui/LoadingErrorWrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFetchData } from "@/hooks/useFetchData";
 import { MessageCircle, User, Video } from "lucide-react";
+import Call from "./call/Call";
+import Chat from "./chat/Chat";
 import DoctorData from "./doctor/PatientData";
 import PatientData from "./patient/DoctorData";
 import Prescription from "./prescription/Prescription";
-import Chat from "./chat/Chat";
-import CallSection from "./call/Call";
 const AppointmentsPage = ({
   appointmentId,
   isDoctor,
@@ -54,7 +54,7 @@ const AppointmentsPage = ({
         </TabsContent>
 
         <TabsContent value="video" className="flex flex-col flex-1">
-          <CallSection data={data} session={session} />
+          <Call data={data} session={session} />
         </TabsContent>
       </Tabs>
 
