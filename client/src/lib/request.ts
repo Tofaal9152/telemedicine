@@ -1,36 +1,57 @@
-"use server"
+"use server";
 import apiServer from "./apiServer";
+import { handleApiError } from "./handleApiError";
 
 // GET
 export const fetcher = async <T = any>(url: string): Promise<T> => {
-  const res = await apiServer.get<T>(url);
-  return res.data;
+  try {
+    const res = await apiServer.get<T>(url);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 // POST
 export const poster = async <T = any>(url: string, data: any): Promise<T> => {
-  const res = await apiServer.post<T>(url, data);
-  return res.data;
+  try {
+    const res = await apiServer.post<T>(url, data);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 // PUT
 export const putter = async <T = any>(url: string, data: any): Promise<T> => {
-  const res = await apiServer.put<T>(url, data);
-  return res.data;
+  try {
+    const res = await apiServer.put<T>(url, data);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 // PATCH
 export const patcher = async <T = any>(url: string, data: any): Promise<T> => {
-  const res = await apiServer.patch<T>(url, data);
-  console.log(res.data);
-  return res.data;
+  try {
+    const res = await apiServer.patch<T>(url, data);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 // DELETE
 export const deleter = async <T = any>(url: string): Promise<T> => {
-  const res = await apiServer.delete<T>(url);
-  return res.data;
+  try {
+    const res = await apiServer.delete<T>(url);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
+
 // import apiClient from "./apiClient";
 
 // // GET

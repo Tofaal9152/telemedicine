@@ -74,5 +74,11 @@ export class UserService {
     });
   }
 
- 
+  async updatePassword(userId: string, newPassword: string) {
+    const hashedPassword = await hash(newPassword);
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+  }
 }

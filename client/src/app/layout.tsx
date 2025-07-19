@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
+import { WebSocketProvider } from "@/context/webSocketContext";
+import { PeerProvider } from "@/context/Peer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,15 +27,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
       <body className={`${inter.variable} antialiased`}>
         <TanstackProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NextTopLoader showSpinner={false} />
-            {children}
-          </ThemeProvider>
+          <WebSocketProvider>
+            <PeerProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <NextTopLoader showSpinner={false} />
+                {children}
+              </ThemeProvider>
+            </PeerProvider>
+          </WebSocketProvider>
         </TanstackProvider>
         <Toaster />
       </body>

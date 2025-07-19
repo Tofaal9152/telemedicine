@@ -1,10 +1,21 @@
-"use client"
+"use client";
 
-import { useInfiniteData } from "@/hooks/useInfiniteData"
-import { InfiniteScroller } from "@/lib/InfiniteScroller"
-import PaymentItem from "./PaymentItem"
+import { useInfiniteData } from "@/hooks/useInfiniteData";
+import { InfiniteScroller } from "@/lib/InfiniteScroller";
+import PaymentItem from "./PaymentItem";
 
-const PaymentsContent = () => {
+const PaymentsContent = ({ session }: { session: any }) => {
+
+  const isDoctor = session?.user?.role === "DOCTOR";
+  const endPoint =
+    isDoctor
+      ? `/appointments/doctor/all`
+      : `/appointments/patient/all`;
+
+  const queryKey =
+    isDoctor
+      ? "doctor-all-payments-records"
+      : "patient-all-payments-records";
   const {
     data,
     isLoading,
@@ -13,10 +24,10 @@ const PaymentsContent = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteData<any>(`/appointments/patient/all`, ["patient-all-payments-records"])
+  } = useInfiniteData<any>(endPoint, [queryKey]);
 
-  const payments = data?.pages.flatMap((page) => page.results) ?? []
-
+  const payments = data?.pages.flatMap((page) => page.results) ?? [];
+  console.log("Payments Content Data:", payments);
   return (
     <section className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-4 md:p-12 text-white border border-white/20 hover:bg-white/15 transition-all duration-500 hover:shadow-3xl">
       <h1 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent animate-fade-in">
@@ -31,7 +42,7 @@ const PaymentsContent = () => {
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage ?? false}
         isFetchingNextPage={isFetchingNextPage}
-        renderItem={(item) => <PaymentItem key={item.id} item={item} />}
+        renderItem={(item) => <PaymentItem key={item.id} item={item} isDoctor={isDoctor} />}
       />
 
       <style jsx>{`
@@ -51,7 +62,7 @@ const PaymentsContent = () => {
         }
       `}</style>
     </section>
-  )
-}
+  );
+};
 
-export default PaymentsContent
+export default PaymentsContent;

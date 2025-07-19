@@ -52,6 +52,7 @@ export const SigninAction = async (
       refreshToken: res?.data?.refreshToken || "",
     });
   } catch (error) {
+    console.log("Error during sign-in:", error);
     return HandleError(error);
   }
   redirect("/");

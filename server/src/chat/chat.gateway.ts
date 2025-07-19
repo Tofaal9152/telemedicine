@@ -8,32 +8,29 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 
-@Roles('DOCTOR', 'PATIENT')
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   constructor(private chatService: ChatService) {}
 
-  handleConnection(socket: Socket) {
-    console.log('Client connected:', socket.id);
+  handleConnection(client: Socket) {
+    console.log('Client connected:', client.id);
   }
 
-  handleDisconnect(socket: Socket) {
-    console.log('Client disconnected:', socket.id);
+  handleDisconnect(client: Socket) {
+    console.log('Client disconnected:', client.id);
   }
 
   @SubscribeMessage('joinRoom')
   async handleJoinRoom(
     @MessageBody() data: { room: string },
-    @ConnectedSocket() socket: Socket,
+    @ConnectedSocket() client: Socket,
   ) {
-    // after joining the room,you can broadcast messages to that room that a user has joined
-    await socket.join(data.room);
+    await client.join(data.room);
   }
 
   @SubscribeMessage('createMessage')

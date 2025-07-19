@@ -14,18 +14,26 @@ export function useMutationHandler<TData, TVariables>({
   return useMutation<TData, unknown, TVariables>({
     mutationFn,
     onSuccess: (data) => {
-      if (queryKey) queryClient.invalidateQueries({ queryKey });
+      if (queryKey) {
+        queryClient.invalidateQueries({ queryKey });
+      }
       if (successMessage) {
         toast.success(successMessage);
       }
       if (onSuccess) onSuccess(data);
     },
     onError: (error: any) => {
-      console.error("Mutation error:", error?.response?.data?.message || error);
+      // Log full error object (stack trace included)
+      console.error("Mutation error:", error);
 
-      toast.error(
-        errorMessage || error?.response?.data?.message || "An error occurred"
-      );
+      // Extract user-friendly message (try multiple places)
+      const userMessage =
+        error?.response?.data?.message || // API error message (preferred)
+        error?.message || // JS error message fallback
+        "An error occurred"; // Generic fallback
+
+      // Show only user-friendly message in toast
+      toast.error(userMessage);
 
       if (onError) onError(error);
     },

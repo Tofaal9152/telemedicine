@@ -8,8 +8,9 @@ type SocketStore = {
 
 export const useSocketStore = create<SocketStore>((set) => ({
   socket: null,
+
   initSocket: () => {
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL);
+    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL!);
     set({ socket });
   },
 }));

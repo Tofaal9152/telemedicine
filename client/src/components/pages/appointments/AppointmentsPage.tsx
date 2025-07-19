@@ -39,7 +39,7 @@ const AppointmentsPage = ({
             Video Call
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" className="flex flex-col flex-1">
+        <TabsContent value="profile" className="flex flex-col flex-1 pb-12">
           {isDoctor ? (
             <DoctorData data={data} appointmentId={appointmentId} />
           ) : (
@@ -48,12 +48,12 @@ const AppointmentsPage = ({
         </TabsContent>
         <TabsContent
           value="chat"
-          className="flex flex-col flex-1 h-full overflow-hidden"
+          className="flex flex-col flex-1 h-full overflow-hidden pb-12"
         >
           <Chat data={data} session={session} />
         </TabsContent>
 
-        <TabsContent value="video" className="flex flex-col flex-1">
+        <TabsContent value="video" className="flex flex-col flex-1 pb-12">
           <Call data={data} session={session} />
         </TabsContent>
       </Tabs>

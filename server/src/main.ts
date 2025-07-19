@@ -11,7 +11,17 @@ async function bootstrap() {
   app.useGlobalPipes(validationPipeConfig);
 
   // Enable CORS
-  app.enableCors(corsConfig);
+  // app.enableCors(corsConfig);
+  // allow all cors
+  app.enableCors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+      // Dynamically allow any origin (required for credentials)
+      return callback(null, true);
+    },
+    credentials: true,
+  });
 
   // Roles Guard And JWT Auth Guard
   const reflector = new Reflector();

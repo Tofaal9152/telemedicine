@@ -18,6 +18,7 @@ import { UserService } from 'src/user/user.service';
 import refreshConfig from './config/refresh.config';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -203,6 +204,32 @@ export class AuthService {
     await this.userService.updateRefreshToken(userId, null);
     return {
       message: 'User signed out successfully!',
+    };
+  }
+  // Update password method
+  async updatePassword(dto: UpdatePasswordDto, userId: string) {
+    if (dto.newPassword === dto.oldPassword) {
+      throw new ConflictException(
+        'New password cannot be the same as old password',
+      );
+    }
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials!');
+    }
+    const isOldPasswordValid = await this.validateUser(
+      user.email,
+      dto.oldPassword,
+    );
+
+    if (dto.newPassword !== dto.confirmPassword) {
+      throw new ConflictException(
+        'New password and confirm password do not match',
+      );
+    }
+    await this.userService.updatePassword(userId, dto.newPassword);
+    return {
+      message: 'Password updated successfully!',
     };
   }
 }

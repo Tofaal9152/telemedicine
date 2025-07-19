@@ -42,6 +42,7 @@ export type Session = {
   user: {
     id: string;
     email: string;
+    name: string;
     role: Role;
   };
   accessToken: string;

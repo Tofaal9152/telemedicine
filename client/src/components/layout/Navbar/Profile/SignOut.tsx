@@ -13,12 +13,14 @@ const SignOut = () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/auth/signout`);
+      console.log(res)
       if (res?.data.success) {
         router.replace("/auth/signin");
       } else {
         console.error("Signout failed:", res?.data.message);
       }
     } catch (err) {
+      console.log("Error during signout:", err);
       console.error("Signout error:", err);
     } finally {
       setLoading(false);

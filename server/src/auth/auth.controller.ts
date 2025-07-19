@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Patch,
   Post,
   Req,
   Request,
@@ -17,6 +18,8 @@ import { AuthService } from './auth.service';
 import { Public } from './decorators';
 import { GoogleAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './guards';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { Roles } from './decorators/roles.decorator';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -90,5 +93,13 @@ export class AuthController {
   @Post('signout')
   signOut(@Req() req: { user: { id: string } }) {
     return this.authService.signOut(req.user.id);
+  }
+  @Roles('ADMIN', 'DOCTOR', 'PATIENT')
+  @Patch('change-password')
+  updateProfile(
+    @Req() req: { user: { id: string } },
+    @Body() dto: UpdatePasswordDto,
+  ) {
+    return this.authService.updatePassword(dto, req.user.id);
   }
 }

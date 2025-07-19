@@ -8,9 +8,9 @@ import GetProfileData from "@/hooks/GetProfileData"
 import { User, Mail, Calendar, Users, Award, CheckCircle } from "lucide-react"
 
 const HeroSection = ({ role }: { role: any }) => {
-  const user = GetProfileData({ role })
+  const {query} = GetProfileData({ role })
 
-  if (user.isPending) {
+  if (query.isPending) {
     return (
       <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 text-white">
         <div className="animate-pulse flex space-x-8">
@@ -28,7 +28,7 @@ const HeroSection = ({ role }: { role: any }) => {
     )
   }
 
-  const userData = user.data
+  const userData = query.data
   const imageUrl = role === "DOCTOR" ? imagePath.doctorImage : imagePath.patientImage
 
   return (

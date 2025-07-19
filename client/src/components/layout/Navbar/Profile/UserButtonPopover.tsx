@@ -8,6 +8,7 @@ const UserButtonPopover = ({ session }: any) => {
       <UserInfo session={session} className="w-12 h-12" />
 
       {/* Sign Out */}
+
       <div className="border-b my-0.5"></div>
       <SignOut />
     </div>
