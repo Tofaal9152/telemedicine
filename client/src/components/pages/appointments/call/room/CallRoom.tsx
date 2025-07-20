@@ -127,43 +127,58 @@ const CallRoom = () => {
       sendStream(myStream);
     }
   }, [peer, myStream, sendStream]);
-
+  console.log(remoteStream, "remoteStream");
+  console.log(myStream, "myStream");
   return (
-    <div>
-      <Button
-        onClick={() => myStream && sendStream(myStream)}
-        variant={"destructive"}
-        size={"lg"}
-      >
-        Send my video
-      </Button>
-      <h4>You are connected to {remoteEmail}</h4>
+    <div className="relative w-full h-screen bg-black text-white overflow-hidden">
+      {/* Remote Video */}
+      <div className="absolute inset-0">
+        {remoteStream ? (
+          <video
+            id="remoteVideo"
+            autoPlay
+            playsInline
+            className="w-full h-full object-cover"
+            ref={(videoElement) => {
+              if (videoElement) videoElement.srcObject = remoteStream;
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400">
+            Waiting for remote stream...
+          </div>
+        )}
+      </div>
+
+      {/* My Video (small preview) */}
       {myStream && (
-        <video
-          id="myVideo"
-          autoPlay
-          className="w-full h-full object-cover"
-          playsInline
-          ref={(videoElement) => {
-            if (videoElement) {
-              videoElement.srcObject = myStream;
-            }
-          }}
-        />
+        <div className="absolute bottom-4 right-4 w-48 h-32 rounded-lg overflow-hidden shadow-lg border border-white/20">
+          <video
+            id="myVideo"
+            autoPlay
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            ref={(videoElement) => {
+              if (videoElement) videoElement.srcObject = myStream;
+            }}
+          />
+        </div>
       )}
-      {remoteStream && (
-        <video
-          id="remoteVideo"
-          autoPlay
-          className="w-full h-full object-cover"
-          playsInline
-          ref={(videoElement) => {
-            if (videoElement) {
-              videoElement.srcObject = remoteStream;
-            }
-          }}
-        />
-      )}
+
+      {/* Controls */}
+      <div className="absolute top-4 left-4 space-y-2">
+        <h4 className="text-lg font-semibold text-white">
+          Connected to: <span className="text-blue-300">{remoteEmail}</span>
+        </h4>
+        <Button
+          onClick={() => myStream && sendStream(myStream)}
+          variant="destructive"
+          size="lg"
+        >
+          Send My Video
+        </Button>
+      </div>
     </div>
   );
 };
