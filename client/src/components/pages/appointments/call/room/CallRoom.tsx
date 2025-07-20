@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { usePeerStore } from "@/context/Peer";
 import { WebSocketContext } from "@/context/webSocketContext";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -108,6 +107,7 @@ const CallRoom = () => {
   const handleNegotiationNeeded = useCallback(async () => {
     if (!peer) return;
     const localOffer = await peer.createOffer();
+    await peer.setLocalDescription(localOffer);
     socket.emit("call-user", {
       offer: localOffer,
       recipientEmail: remoteEmail,
@@ -122,13 +122,14 @@ const CallRoom = () => {
     };
   }, [peer, handleNegotiationNeeded]);
 
-  useEffect(() => {
-    if (peer && myStream) {
-      sendStream(myStream);
-    }
-  }, [peer, myStream, sendStream]);
   console.log(remoteStream, "remoteStream");
   console.log(myStream, "myStream");
+  useEffect(() => {
+    if (myStream) {
+      sendStream(myStream);
+    }
+  }, [myStream, sendStream]);
+
   return (
     <div className="relative w-full h-screen bg-black text-white overflow-hidden">
       {/* Remote Video */}
@@ -165,20 +166,6 @@ const CallRoom = () => {
           />
         </div>
       )}
-
-      {/* Controls */}
-      <div className="absolute top-4 left-4 space-y-2">
-        <h4 className="text-lg font-semibold text-white">
-          Connected to: <span className="text-blue-300">{remoteEmail}</span>
-        </h4>
-        <Button
-          onClick={() => myStream && sendStream(myStream)}
-          variant="destructive"
-          size="lg"
-        >
-          Send My Video
-        </Button>
-      </div>
     </div>
   );
 };

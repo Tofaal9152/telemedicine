@@ -7,6 +7,7 @@ import {
   useState,
   useCallback,
 } from "react";
+import { toast } from "sonner";
 
 interface PeerContextType {
   peer: RTCPeerConnection | null;
@@ -99,10 +100,16 @@ export const PeerProvider = ({ children }: { children: React.ReactNode }) => {
   );
   const sendStream = useCallback(
     (stream: MediaStream) => {
-      if (!peer) throw new Error("Peer connection not ready yet");
-      stream.getTracks().forEach((track) => {
-        peer.addTrack(track, stream);
-      });
+      try {
+        if (!peer) throw new Error("Peer connection not ready yet");
+
+        const tracks = stream.getTracks();
+        for (const track of tracks) {
+          peer.addTrack(track, stream);
+        }
+      } catch (error: any) {
+        toast.error("Error sending stream: " + error.message);
+      }
     },
     [peer]
   );
