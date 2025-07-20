@@ -18,6 +18,7 @@ interface PeerContextType {
   setRemoteDescription: (answer: RTCSessionDescriptionInit) => Promise<void>;
   remoteStream: MediaStream | null;
   sendStream: (stream: MediaStream) => void;
+  handleEndCallResetAll: () => void;
 }
 
 const peerContext = createContext<PeerContextType | null>(null);
@@ -130,6 +131,19 @@ export const PeerProvider = ({ children }: { children: React.ReactNode }) => {
       peer.removeEventListener("track", handleTrackEvent);
     };
   }, [peer, handleTrackEvent]);
+  // Reset Peer Connection
+  const handleEndCallResetAll = useCallback(() => {
+    if (peer) {
+      peer.close();
+    }
+    if (remoteStream) {
+      remoteStream.getTracks().forEach((track) => track.stop());
+      setRemoteStream(null);
+    }
+
+    setRemoteStream(null);
+    setPeer(null);
+  }, [peer, remoteStream]);
 
   const contextValue = useMemo(
     () => ({
@@ -139,6 +153,7 @@ export const PeerProvider = ({ children }: { children: React.ReactNode }) => {
       setRemoteDescription,
       sendStream,
       remoteStream,
+      handleEndCallResetAll,
     }),
     [
       peer,
@@ -147,6 +162,7 @@ export const PeerProvider = ({ children }: { children: React.ReactNode }) => {
       setRemoteDescription,
       sendStream,
       remoteStream,
+      handleEndCallResetAll,
     ]
   );
 

@@ -1,9 +1,11 @@
 import CallRoom from "@/components/pages/appointments/call/room/CallRoom";
+import { RoomPageProps } from "@/types/dynamic-route";
 
-const page = () => {
+const page = async ({ params }: RoomPageProps) => {
+  const { room } = await params;
   return (
     <div>
-      <CallRoom />
+      <CallRoom room={room} />
     </div>
   );
 };

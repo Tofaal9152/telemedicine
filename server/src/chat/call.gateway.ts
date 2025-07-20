@@ -26,11 +26,11 @@ export class CallGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
-    console.log('Client connected:', client.id);
+    // console.log('Client connected:', client.id);
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Client disconnected:', client.id);
+    // console.log('Client disconnected:', client.id);
   }
 
   @SubscribeMessage('join-room')
@@ -87,5 +87,26 @@ export class CallGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(socketId).emit('call-accepted', {
       answer,
     });
+  }
+  @SubscribeMessage('end-call')
+  handleEndCall(
+    @MessageBody() data: { room: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { room } = data;
+    // client.broadcast.to(room).emit('user-left', {
+    //   email: socketToEmailMap.get(client.id),
+    //   message: `User with has left the call`,
+    // });
+    // client.emit('end-call', {
+    //   message: `You have left the call`,
+    // });
+    // all users in the room
+
+    this.server.to(room).emit('end-call', {
+      message: `User with email ${socketToEmailMap.get(client.id)} has left the call`,
+    });
+
+    console.log(`User ended call in room: ${room}`, client.id);
   }
 }

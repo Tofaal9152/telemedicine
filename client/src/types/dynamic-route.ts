@@ -3,3 +3,8 @@ export type PageProps = {
     id: string;
   }>;
 };
+export type RoomPageProps = {
+  params: Promise<{
+    room: string;
+  }>;
+};

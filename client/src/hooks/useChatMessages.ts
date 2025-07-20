@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
 import { useFetchData } from "@/hooks/useFetchData";
-import { WebSocketContext } from "@/context/webSocketContext";
+import { useSocket } from "./useSocket";
 
 export const useChatMessages = (room: string, session: any, data: any) => {
-  const socket = useContext(WebSocketContext);
+    const socket = useSocket();
+
   const [messages, setMessages] = useState<any[]>([]);
   const [message, setMessage] = useState("");
 

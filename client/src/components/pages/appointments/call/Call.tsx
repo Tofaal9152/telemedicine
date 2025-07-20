@@ -1,15 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { WebSocketContext } from "@/context/webSocketContext";
+import { useSocket } from "@/hooks/useSocket";
 import { Video } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
 const Call = ({ data, session }: { data: any; session: any }) => {
   const router = useRouter();
-  const socket = useContext(WebSocketContext);
+  const socket = useSocket();
+
   const room = `room-call-${data?.doctorId}-${data?.patientId}`;
 
   const handleJoinRoom = useCallback(() => {
