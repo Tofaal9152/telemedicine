@@ -6,13 +6,9 @@ export const getSocket = (): Socket => {
   if (!socket) {
     socket = io(process.env.NEXT_PUBLIC_BACKEND_URL!);
 
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket?.id);
-    });
+    socket.on("connect", () => {});
 
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
+    socket.on("disconnect", () => {});
   }
 
   return socket;

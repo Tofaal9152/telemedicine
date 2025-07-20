@@ -14,10 +14,12 @@ async function bootstrap() {
   // app.enableCors(corsConfig);
   // allow all cors
   app.enableCors({
-    origin: (origin, callback) => {
+    origin: (origin: any, callback: any) => {
       // Allow requests with no origin (like Postman)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       if (!origin) return callback(null, true);
       // Dynamically allow any origin (required for credentials)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return callback(null, true);
     },
     credentials: true,

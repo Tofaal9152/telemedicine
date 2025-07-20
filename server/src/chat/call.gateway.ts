@@ -13,7 +13,7 @@ type JoinRoomDataTypes = {
   email: string;
 };
 type CallOfferData = {
-  email: string;
+  recipientEmail: string;
   offer: unknown;
   room: string;
 };
@@ -46,7 +46,7 @@ export class CallGateway implements OnGatewayConnection, OnGatewayDisconnect {
       message: `You (${email}) have joined the room: ${room}`,
     });
     client.broadcast.to(room).emit('user-joined', {
-      email,
+      recipientEmail: email,
     });
     console.log(`User with email ${email} joined room: ${room}`, client.id);
   }
@@ -56,33 +56,32 @@ export class CallGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: CallOfferData,
     @ConnectedSocket() client: Socket,
   ) {
-    const { offer, email } = data;
-    const fromEmail = socketToEmailMap.get(client.id);
-    const socketId = emailToSocketMap.get(email);
+    const { offer, recipientEmail } = data;
+    const senderEmail = socketToEmailMap.get(client.id);
+    const recipentSocketId = emailToSocketMap.get(recipientEmail);
 
-    if (!socketId) {
-      console.error(`No socket found for email: ${email}`);
+    if (!recipentSocketId) {
+      console.error(`No socket found for recipientEmail: ${recipientEmail}`);
       return;
     }
-    console.log(
-      `Emitting incoming call to ${email} with offer from ${fromEmail}`,
-    );
-    return this.server.to(socketId).emit('incoming-call', {
+    console.log(`Call to ${recipientEmail} user from ${senderEmail} user`);
+    return this.server.to(recipentSocketId).emit('incoming-call', {
       offer,
-      from: fromEmail,
+      senderEmail: senderEmail,
     });
   }
   @SubscribeMessage('call-accepted')
   handleCallAccepted(
-    @MessageBody() data: { email: string; answer: RTCSessionDescriptionInit },
+    @MessageBody()
+    data: { senderEmail: string; answer: RTCSessionDescriptionInit },
     @ConnectedSocket() client: Socket,
   ) {
+    const { senderEmail, answer } = data;
+    console.log(senderEmail);
+    const socketId = emailToSocketMap.get(senderEmail);
 
-    const { email, answer } = data;
-    console.log(email)
-    const socketId = emailToSocketMap.get(email);
     if (!socketId) {
-      console.error(`No socket found for email: ${email}`);
+      console.error(`No socket found for email: ${senderEmail}`);
       return;
     }
     this.server.to(socketId).emit('call-accepted', {

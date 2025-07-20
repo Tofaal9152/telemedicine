@@ -1,19 +1,29 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { usePeerStore } from "@/context/Peer";
 import { WebSocketContext } from "@/context/webSocketContext";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const CallRoom = ({ session }: { session: any }) => {
+const CallRoom = () => {
   const socket = useContext(WebSocketContext);
   const [myStream, setMyStream] = useState<MediaStream | null>(null);
-  const { createOffer, CreateAnswer, setRemoteDescription } = usePeerStore();
+  const [remoteEmail, setRemoteEmail] = useState<string | null>(null);
+
+  const {
+    createOffer,
+    CreateAnswer,
+    setRemoteDescription,
+    sendStream,
+    remoteStream,
+    peer,
+  } = usePeerStore();
   // New User Joined
   const handleUserJoined = useCallback(
-    async (data: { email: string }) => {
-      console.log(`User ${data.email} joined the call.`);
-      toast.success(`User ${data.email} joined the call.`, {
+    async (data: { recipientEmail: string }) => {
+      console.log(`User ${data.recipientEmail} joined the call.`);
+      toast.success(`User ${data.recipientEmail} joined the call.`, {
         duration: 2000,
         position: "top-right",
       });
@@ -22,33 +32,34 @@ const CallRoom = ({ session }: { session: any }) => {
       setTimeout(() => {
         socket.emit("call-user", {
           offer,
-          email: data.email,
+          recipientEmail: data.recipientEmail,
         });
       }, 1000);
+      setRemoteEmail(data.recipientEmail);
     },
     [createOffer, socket]
   );
   // Handle incoming call
   const handleIncomingCall = useCallback(
-    async (data: { from: string; offer: RTCSessionDescriptionInit }) => {
-      const { from, offer } = data;
-      console.log("Incoming call from:", from);
-      console.log("Incoming call offer received:", offer);
+    async (data: { senderEmail: string; offer: RTCSessionDescriptionInit }) => {
+      const { senderEmail, offer } = data;
+
+      console.log(`Incoming call from ${senderEmail}:`, offer);
       const answer = await CreateAnswer(offer);
 
       socket?.emit("call-accepted", {
         answer,
-        email: session?.user?.email,
+        senderEmail: senderEmail,
       });
+      setRemoteEmail(senderEmail);
     },
-    [CreateAnswer, socket, session]
+    [CreateAnswer, socket]
   );
   // Handle call accepted
   const handleCallAccepted = useCallback(
     async (data: { answer: RTCSessionDescriptionInit }) => {
       console.log("Call accepted:", data.answer);
       await setRemoteDescription(data.answer);
-      console.log("Call accepted:", data.answer);
     },
     [setRemoteDescription]
   );
@@ -59,6 +70,7 @@ const CallRoom = ({ session }: { session: any }) => {
         video: true,
         audio: true,
       });
+
       setMyStream(stream);
       console.log("User media stream acquired:", stream);
     } catch (error: any) {
@@ -90,11 +102,36 @@ const CallRoom = ({ session }: { session: any }) => {
   // userMedia
   useEffect(() => {
     getUserMediaStream();
-  }, []);
+  }, [getUserMediaStream]);
+
+  // neghotiation needed
+  const handleNegotiationNeeded = useCallback(async () => {
+    if (!peer) return;
+    const localOffer =await peer.createOffer();
+    socket.emit("call-user", {
+      offer: localOffer,
+      recipientEmail: remoteEmail,
+    });
+  }, [peer, remoteEmail, socket]);
+
+  useEffect(() => {
+    if (!peer) return;
+    peer.addEventListener("negotiationneeded", handleNegotiationNeeded);
+    return () => {
+      peer.removeEventListener("negotiationneeded", handleNegotiationNeeded);
+    };
+  }, [peer, handleNegotiationNeeded]);
 
   return (
     <div>
-      Enter
+      <Button
+        onClick={() => myStream && sendStream(myStream)}
+        variant={"destructive"}
+        size={"lg"}
+      >
+        Start Call
+      </Button>
+      <h4>You are connected to {remoteEmail}</h4>
       {myStream && (
         <video
           id="myVideo"
@@ -104,6 +141,19 @@ const CallRoom = ({ session }: { session: any }) => {
           ref={(videoElement) => {
             if (videoElement) {
               videoElement.srcObject = myStream;
+            }
+          }}
+        />
+      )}
+      {remoteStream && (
+        <video
+          id="remoteVideo"
+          autoPlay
+          className="w-full h-full object-cover"
+          playsInline
+          ref={(videoElement) => {
+            if (videoElement) {
+              videoElement.srcObject = remoteStream;
             }
           }}
         />

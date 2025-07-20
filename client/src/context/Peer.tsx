@@ -15,6 +15,8 @@ interface PeerContextType {
     offer: RTCSessionDescriptionInit
   ) => Promise<RTCSessionDescriptionInit>;
   setRemoteDescription: (answer: RTCSessionDescriptionInit) => Promise<void>;
+  remoteStream: MediaStream | null;
+  sendStream: (stream: MediaStream) => void;
 }
 
 const peerContext = createContext<PeerContextType | null>(null);
@@ -28,6 +30,7 @@ export const usePeerStore = () => {
 };
 
 export const PeerProvider = ({ children }: { children: React.ReactNode }) => {
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [peer, setPeer] = useState<RTCPeerConnection | null>(null);
 
   useEffect(() => {
@@ -94,7 +97,7 @@ export const PeerProvider = ({ children }: { children: React.ReactNode }) => {
     },
     [peer]
   );
-const sendStream = useCallback(
+  const sendStream = useCallback(
     (stream: MediaStream) => {
       if (!peer) throw new Error("Peer connection not ready yet");
       stream.getTracks().forEach((track) => {
@@ -104,9 +107,40 @@ const sendStream = useCallback(
     [peer]
   );
 
+  const handleTrackEvent = useCallback(
+    (event: RTCTrackEvent) => {
+      const remoteStream = event.streams[0];
+      setRemoteStream(remoteStream);
+    },
+    [setRemoteStream]
+  );
+
+  useEffect(() => {
+    if (!peer) return;
+    peer.addEventListener("track", (event) => handleTrackEvent(event));
+
+    return () => {
+      peer.removeEventListener("track", handleTrackEvent);
+    };
+  }, [peer, handleTrackEvent]);
+
   const contextValue = useMemo(
-    () => ({ peer, createOffer, CreateAnswer, setRemoteDescription, sendStream }),
-    [peer, createOffer, CreateAnswer, setRemoteDescription, sendStream]
+    () => ({
+      peer,
+      createOffer,
+      CreateAnswer,
+      setRemoteDescription,
+      sendStream,
+      remoteStream,
+    }),
+    [
+      peer,
+      createOffer,
+      CreateAnswer,
+      setRemoteDescription,
+      sendStream,
+      remoteStream,
+    ]
   );
 
   return (
