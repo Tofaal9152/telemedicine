@@ -107,7 +107,7 @@ const CallRoom = () => {
   // neghotiation needed
   const handleNegotiationNeeded = useCallback(async () => {
     if (!peer) return;
-    const localOffer =await peer.createOffer();
+    const localOffer = await peer.createOffer();
     socket.emit("call-user", {
       offer: localOffer,
       recipientEmail: remoteEmail,
@@ -122,6 +122,12 @@ const CallRoom = () => {
     };
   }, [peer, handleNegotiationNeeded]);
 
+  useEffect(() => {
+    if (peer && myStream) {
+      sendStream(myStream);
+    }
+  }, [peer, myStream, sendStream]);
+
   return (
     <div>
       <Button
@@ -129,7 +135,7 @@ const CallRoom = () => {
         variant={"destructive"}
         size={"lg"}
       >
-        Start Call
+        Send my video
       </Button>
       <h4>You are connected to {remoteEmail}</h4>
       {myStream && (
