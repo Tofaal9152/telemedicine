@@ -5,7 +5,7 @@ import { getSession } from "@/lib/session";
 const page = async () => {
   const session = await getSession();
   return (
-    <div>
+    <div className="pb-20 lg:pb-0">
       <div className="space-y-10">
         <div >
           <div className="text-center">

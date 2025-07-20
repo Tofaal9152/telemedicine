@@ -5,17 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useActionState } from "react";
 
-const SignupForm = () => {
+const SigninForm = () => {
   const [state, action, isPending] = useActionState(SigninAction, {
     errors: {},
   });
-  console.log(state);
+
   return (
     <form action={action} className="w-full">
       <Input name="email" type="email" placeholder="Email" className="mb-4" />
       {state.errors.email && (
         <p className="text-red-500 text-sm">{state.errors.email}</p>
       )}
+
       <Input
         name="password"
         type="password"
@@ -25,14 +26,16 @@ const SignupForm = () => {
       {state.errors.password && (
         <p className="text-red-500 text-sm">{state.errors.password}</p>
       )}
+
       <Button disabled={isPending} className="w-full">
         Sign In
       </Button>
+
       {state.errors.formError && (
-        <p className="text-red-500 text-sm">{state.errors.formError}</p>
+        <p className="text-red-500 text-sm mt-2">{state.errors.formError}</p>
       )}
     </form>
   );
 };
 
-export default SignupForm;
+export default SigninForm;
