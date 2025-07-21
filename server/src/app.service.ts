@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 @Injectable()
 export class AppService {
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async pingSelf() {
+    const baseUrl =
+      process.env.RENDER_EXTERNAL_URL ||
+      process.env.BASE_URL ||
+      'http://localhost:8089';
+    console.log(`Pinging self at ${baseUrl}`);
     try {
-       const baseUrl = process.env.RENDER_EXTERNAL_URL || process.env.BASE_URL || 'http://localhost:3000';
-      console.log(`Pinging self at ${baseUrl}`);
       const res = await fetch(`${baseUrl}`);
       console.log(`Self ping response: ${res.status}`);
     } catch (e) {
