@@ -39,12 +39,13 @@ const AppointmentsPage = ({
             Video Call
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" className="flex flex-col flex-1 pb-12">
+        <TabsContent value="profile" className="flex flex-col flex-1 pb-12 space-y-4">
           {isDoctor ? (
             <DoctorData data={data} appointmentId={appointmentId} />
           ) : (
             <PatientData data={data} />
           )}
+          <Prescription appointmentId={appointmentId} session={session} />
         </TabsContent>
         <TabsContent
           value="chat"
@@ -57,8 +58,6 @@ const AppointmentsPage = ({
           <Call data={data} session={session} />
         </TabsContent>
       </Tabs>
-
-      <Prescription appointmentId={appointmentId} session={session} />
     </LoadingErrorWrapper>
   );
 };
