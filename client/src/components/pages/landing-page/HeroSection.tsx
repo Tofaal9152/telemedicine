@@ -169,7 +169,7 @@ const InfoCard = ({
       {icon}
       <span className="text-sm font-medium text-blue-200">{label}</span>
     </div>
-    <p className="font-semibold text-white">{value}</p>
+    <p className="font-semibold text-white line-clamp-1">{value}</p>
   </div>
 )
 

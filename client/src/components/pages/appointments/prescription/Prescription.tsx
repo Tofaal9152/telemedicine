@@ -14,14 +14,19 @@ const Prescription = ({
   appointmentId: string;
   session: any;
 }) => {
-  const { data: prescriptionData, isPending, error, isError } = useFetchData<any>(
-    `/prescription/appointment/${appointmentId}`,
-    ["prescription", appointmentId]
-  );
+  const {
+    data: prescriptionData,
+    isPending,
+    error,
+    isError,
+  } = useFetchData<any>(`/prescription/appointment/${appointmentId}`, [
+    "prescription",
+    appointmentId,
+  ]);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
-const data = prescriptionData?.result;
+  const data = prescriptionData?.result;
   return (
     <LoadingErrorWrapper
       isLoading={isPending}
@@ -31,13 +36,13 @@ const data = prescriptionData?.result;
     >
       <div
         ref={contentRef}
-        className="bg-white text-black p-12 rounded shadow-sm max-w-3xl mx-auto min-h-screen my-4 border"
+        className="bg-white text-black p-4 sm:p-6 md:p-8 rounded shadow-sm w-full max-w-screen-md mx-auto my-4 border overflow-x-auto"
       >
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-4 mb-4">
           <div>
             <h1 className="text-2xl font-bold text-blue-800">
-             Telemedicine Prescription
+              Telemedicine Prescription
             </h1>
             <p className="text-sm text-gray-600">Telemedicine, Bangladesh</p>
             <p className="text-sm text-gray-600">Phone: +880 123-456-789</p>
@@ -86,9 +91,9 @@ const data = prescriptionData?.result;
         </div>
 
         {/* Medication Table */}
-        <div className="mb-6">
+        <div className="mb-6 overflow-x-auto">
           <h3 className="font-semibold mb-2">Medications</h3>
-          <table className="w-full border-collapse border">
+          <table className="w-full min-w-[500px] border-collapse border">
             <thead>
               <tr className="bg-gray-100">
                 <th className="border p-2 text-left">Medicine</th>
