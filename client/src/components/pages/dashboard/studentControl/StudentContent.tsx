@@ -4,7 +4,7 @@ import { useInfiniteData } from "@/hooks/useInfiniteData";
 
 import { InfiniteScroller } from "@/lib/InfiniteScroller";
 import PatientItem from "./StudentItem";
-const patientContent = () => {
+const PatientContent = () => {
   const {
     data,
     isLoading,
@@ -33,4 +33,4 @@ const patientContent = () => {
   );
 };
 
-export default patientContent;
+export default PatientContent;

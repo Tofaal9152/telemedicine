@@ -33,7 +33,7 @@ export function useMutationHandler<TData, TVariables>({
         "An error occurred"; // Generic fallback
 
       // Show only user-friendly message in toast
-      toast.error(userMessage);
+      toast.error(errorMessage || userMessage);
 
       if (onError) onError(error);
     },
