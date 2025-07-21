@@ -1,8 +1,8 @@
 "use client";
 
 import { SigninAction } from "@/actions/auth/signin";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import LoadingButton from "@/components/ui/LoadingButton";
 import { useActionState } from "react";
 
 const SigninForm = () => {
@@ -27,9 +27,9 @@ const SigninForm = () => {
         <p className="text-red-500 text-sm">{state.errors.password}</p>
       )}
 
-      <Button disabled={isPending} className="w-full">
+      <LoadingButton isLoading={isPending} className="w-full">
         Sign In
-      </Button>
+      </LoadingButton>
 
       {state.errors.formError && (
         <p className="text-red-500 text-sm mt-2">{state.errors.formError}</p>
