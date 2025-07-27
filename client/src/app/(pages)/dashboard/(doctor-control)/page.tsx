@@ -1,11 +1,14 @@
 import DoctorContent from "@/components/pages/dashboard/agentControl/DoctorContent";
 import DoctorControlForm from "@/components/pages/dashboard/agentControl/DoctorControlForm";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+import Link from "next/link";
 
 const page = async () => {
   return (
     <div>
       <div className="p-6 InterFont">
-        <div className="flex items-center space-x-4 mb-6">
+        <div className="flex items-center justify-between space-x-4 mb-6">
           <div>
             <h2 className="text-2xl font-bold InterFont">Doctor Control</h2>
             <p className="text-sm text-muted-foreground InterFont">
@@ -13,6 +16,11 @@ const page = async () => {
               and delete doctors as needed.
             </p>
           </div>
+          <Link href="https://verify.bmdc.org.bd/" target="_blank" className="animate-pulse">
+            <Button variant={"destructive"}>
+              <Check /> Verify BMDC Registration
+            </Button>
+          </Link>
         </div>
         <DoctorControlForm />
 

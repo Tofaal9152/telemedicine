@@ -29,6 +29,7 @@ export type DoctorRegisterType = {
     experience?: string[];
     bio?: string[];
     visitFee?: string[];
+    registrationNumber?: string[];
     formError?: string[];
   };
 };

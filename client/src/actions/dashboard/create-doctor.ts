@@ -26,6 +26,7 @@ export const CreateDoctorAction = async (
       experience: formData.get("experience"),
       bio: formData.get("bio"),
       visitFee: Number(formData.get("visitFee")),
+      registrationNumber: formData.get("registrationNumber"),
     });
 
     return {

@@ -62,6 +62,10 @@ const DoctorSignupForm = () => {
       {state.errors.visitFee && (
         <p className="text-red-500 text-sm">{state.errors.visitFee}</p>
       )}
+      <Input name="registrationNumber" type="number" placeholder="BMDC Registration Number" />
+      {state.errors.registrationNumber && (
+        <p className="text-red-500 text-sm">{state.errors.registrationNumber}</p>
+      )}
 
       <LoadingButton isLoading={isPending} className="w-full">
         Sign Up

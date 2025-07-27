@@ -37,5 +37,9 @@ export class CreateDoctorDto {
 
   @IsString()
   @IsNotEmpty()
+  registrationNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
   experience: string;
 }

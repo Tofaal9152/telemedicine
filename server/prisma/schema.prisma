@@ -27,13 +27,14 @@ model User {
 }
 
 model Doctor {
-  id         String  @id @default(cuid())
-  userId     String  @unique
-  specialty  String
-  bio        String
-  experience String
-  isApproved Boolean @default(false)
-  visitFee   Float   @default(500)
+  id                 String  @id @default(cuid())
+  userId             String  @unique
+  specialty          String
+  bio                String
+  experience         String
+  isApproved         Boolean @default(false)
+  visitFee           Float   @default(500)
+  registrationNumber String?
 
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Appointment  Appointment[]

@@ -32,7 +32,7 @@ const BottomTabNavigation = ({ navItems }: BottomTabNavigationProps) => {
         <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200/20 dark:border-gray-700/20 shadow-lg">
           <div className="flex items-center justify-around h-16">
             {/* Main Navigation Items */}
-            {navItems.slice(0, 4).map((item, index) => {
+            {navItems.slice(0, 5).map((item, index) => {
               const isActive = pathname === item.link;
               return (
                 <Link

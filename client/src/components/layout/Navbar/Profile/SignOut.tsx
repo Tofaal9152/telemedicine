@@ -13,9 +13,9 @@ const SignOut = () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/auth/signout`);
-      console.log(res)
+      console.log(res);
       if (res?.data.success) {
-        router.replace("/auth/signin");
+        router.refresh();
       } else {
         console.error("Signout failed:", res?.data.message);
       }

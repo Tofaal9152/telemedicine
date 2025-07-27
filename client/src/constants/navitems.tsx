@@ -1,4 +1,12 @@
-import { CreditCard, Home, LayoutDashboard, PlusCircleIcon, Search, Settings, User } from "lucide-react";
+import {
+  CreditCard,
+  Home,
+  LayoutDashboard,
+  PlusCircleIcon,
+  Search,
+  Settings,
+  User,
+} from "lucide-react";
 
 export const NavbarNavItems = (session: any) => {
   return {
@@ -17,21 +25,29 @@ export const NavbarNavItems = (session: any) => {
             },
           ]
         : []),
+      ...(session
+        ? [
+            {
+              name: "Search",
+              link: "/search",
+              icon: <Search size={18} />,
+            },
+            {
+              name: "Payments",
+              link: "/payments",
+              icon: <CreditCard size={18} />,
+            },
+            {
+              name: "Settings",
+              link: "/settings",
+              icon: <Settings size={18} />,
+            },
+          ]
+        : []),
       {
-        name: "Search",
-        link: "/search",
-        icon: <Search size={18} />,
-      },
-      {
-        name: "Payments",
-        link: "/payments",
-        icon: <CreditCard size={18} />,
-      },
-      // settings
-      {
-        name: "Settings",
-        link: "/settings",
-        icon: <Settings size={18} />,
+        name: "Ambulance",
+        link: "/ambulance",
+        icon: <PlusCircleIcon size={18} />,
       },
     ],
   };
