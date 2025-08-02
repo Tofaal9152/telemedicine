@@ -35,8 +35,8 @@ export type DoctorRegisterType = {
 };
 export enum Role {
   ADMIN = "ADMIN",
-  EDITOR = "EDITOR",
-  USER = "USER",
+  DOCTOR = "DOCTOR",
+  PATIENT = "PATIENT",
 }
 
 export type Session = {

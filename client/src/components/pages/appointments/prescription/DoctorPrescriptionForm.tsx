@@ -5,6 +5,7 @@ import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DoctorPrescriptionForm = ({
   data,
@@ -13,6 +14,7 @@ const DoctorPrescriptionForm = ({
   data: any;
   appointmentId: string;
 }) => {
+  const queryClient = useQueryClient();
   const mutation = CreatePrescriptionAction(["prescription", appointmentId]);
   const [symptoms, setSymptoms] = useState("");
   const [diagnosis, setDiagnosis] = useState("");
@@ -51,6 +53,7 @@ const DoctorPrescriptionForm = ({
       ),
       notes,
     });
+    queryClient.invalidateQueries({ queryKey: ["notifications"] });
   };
 
   return (
