@@ -4,6 +4,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginationService } from 'src/common/services/pagination.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { NotificationService } from 'src/notification/notification.service';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const SSLCommerzPayment = require('sslcommerz-lts');
 @Injectable()
@@ -11,6 +12,7 @@ export class AppointmentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly paginationService: PaginationService,
+    private readonly notificationService: NotificationService,
   ) {}
   async appointmentsService(
     appointmentDto: CreateAppointmentDto,

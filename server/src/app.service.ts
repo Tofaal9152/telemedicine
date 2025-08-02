@@ -2,12 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 @Injectable()
 export class AppService {
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  // @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async pingSelf() {
-    const baseUrl =
-      process.env.RENDER_EXTERNAL_URL ||
-      process.env.BASE_URL ||
-      'http://localhost:8089';
+    const baseUrl = process.env.BASE_URL;
     console.log(`Pinging self at ${baseUrl}`);
     try {
       const res = await fetch(`${baseUrl}`);
@@ -26,12 +24,8 @@ export class AppService {
           <p style="margin-bottom: 10px;">The server is running smoothly.</p>
           <p style="margin-bottom: 10px;">✅ Server is running and ready to handle requests.</p>
           <p style="margin-bottom: 20px;">Enjoy building with NestJS</p>
-          <img 
-            src="https://www.hostgator.com/blog/wp-content/uploads/2021/03/How-Much-Does-It-Cost-to-Build-a-Gaming-Server-.jpg" 
-            alt="Placeholder Image"
-            style="max-width: 500px; width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px;"
-          />
-          <p style="color: #aaa;">Need help? Check the server logs or documentation..</p>
+
+          <p style="color: #aaa;">Need help? <a href="https://www.github.com/Tofaal9152" target="_blank">Github</a></p>
         </div>
       </div>
     `;

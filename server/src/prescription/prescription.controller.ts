@@ -6,16 +6,12 @@ import {
   Param,
   Patch,
   Post,
-  Query,
-  Req,
   Request,
 } from '@nestjs/common';
-import { Request as expressRequest } from 'express';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CreatePrescriptionDto } from './dto/create-prescription.dto';
-import { PrescriptionService } from './prescription.service';
 import { UpdatePrescriptionDto } from './dto/update-prescription.dto';
+import { PrescriptionService } from './prescription.service';
 
 @Controller('prescription')
 export class PrescriptionController {

@@ -20,10 +20,11 @@ model User {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  doctor  Doctor?
-  patient Patient?
-  admin   Admin?
-  Message Message[]
+  doctor       Doctor?
+  patient      Patient?
+  admin        Admin?
+  Message      Message[]
+  Notification Notification[]
 }
 
 model Doctor {
@@ -102,6 +103,18 @@ model Message {
   patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
+model Notification {
+  id        String               @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean              @default(false)
+  createdAt DateTime             @default(now())
+  priority  NotificationPriority @default(NORMAL)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum Role {
   ADMIN
   DOCTOR
@@ -118,4 +131,11 @@ enum AppointmentStatus {
   PENDING
   FAILED
   CANCELED
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  MEDIUM
+  HIGH
 }

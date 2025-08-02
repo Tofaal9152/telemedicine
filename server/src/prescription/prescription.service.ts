@@ -1,20 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginationService } from 'src/common/services/pagination.service';
+import { NotificationService } from 'src/notification/notification.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePrescriptionDto } from './dto/create-prescription.dto';
 import { UpdatePrescriptionDto } from './dto/update-prescription.dto';
-
 @Injectable()
 export class PrescriptionService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly paginationService: PaginationService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async create(createPrescriptionDto: CreatePrescriptionDto, userId: string) {
     const doctor = await this.prisma.doctor.findUnique({
       where: { userId: userId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (!doctor || createPrescriptionDto.doctorId !== doctor.id) {
@@ -54,6 +62,15 @@ export class PrescriptionService {
         notes: createPrescriptionDto.notes,
       },
     });
+    // send notifications to patient after creating prescription
+    await this.notificationService.create(
+      {
+        title: 'New Prescription Created',
+        message: `A new prescription has been created By Dr. ${doctor.user.name} for your appointment.`,
+        priority: 'HIGH',
+      },
+      patient.userId,
+    );
     return newPrescription;
   }
 
@@ -122,6 +139,13 @@ export class PrescriptionService {
   ) {
     const doctor = await this.prisma.doctor.findUnique({
       where: { userId: userId },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     if (!doctor) {
@@ -130,15 +154,59 @@ export class PrescriptionService {
     // check  he can delete the prescription
     const CheckprescriptionUpdt = await this.prisma.prescription.findFirst({
       where: { doctorId: doctor.id },
+      include: {
+        patient: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                age: true,
+                gender: true,
+              },
+            },
+          },
+        },
+        doctor: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                age: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!CheckprescriptionUpdt) {
       throw new NotFoundException('You cannot Edit this prescription');
     }
-    return this.prisma.prescription.update({
+
+    const updatedPrescription = this.prisma.prescription.update({
       where: { id },
       data: updatePrescriptionDto,
     });
+
+    const patient = await this.prisma.patient.findUnique({
+      where: { id: updatePrescriptionDto.patientId },
+    });
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+    await this.notificationService.create(
+      {
+        title: 'Prescription Updated',
+        message: `Your prescription has been updated by Dr. ${doctor.user.name}.`,
+        priority: 'HIGH',
+      },
+      patient.userId,
+    );
+    return updatedPrescription;
   }
 
   async remove(id: string, userId: string) {
@@ -165,4 +233,6 @@ export class PrescriptionService {
       prescription,
     };
   }
+
+  //send morning, afternoon and evening notifications for medicine if prescription exists automatically
 }
