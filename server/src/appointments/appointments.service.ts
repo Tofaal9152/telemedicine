@@ -137,7 +137,7 @@ export class AppointmentsService {
     return {
       success: true,
       message: 'Appointment payment successful',
-      redirectUrl: `http://localhost:3000/appointments/success/tranId=${tranId}`,
+      redirectUrl: `https://telemedicine-olive.vercel.app/appointments/success/tranId=${tranId}`,
     };
   }
 
@@ -158,7 +158,7 @@ export class AppointmentsService {
     return {
       success: false,
       message: 'Appointment payment failed',
-      redirectUrl: `http://localhost:3000/appointments/fail/tranId=${tranId}`,
+      redirectUrl: `https://telemedicine-olive.vercel.app/appointments/fail/tranId=${tranId}`,
     };
   }
   async appointmentsCancel(tranId: string) {
@@ -178,7 +178,7 @@ export class AppointmentsService {
     return {
       success: false,
       message: 'Appointment payment canceled',
-      redirectUrl: `http://localhost:3000/appointments/cancel/tranId=${tranId}`,
+      redirectUrl: `https://telemedicine-olive.vercel.app/appointments/cancel/tranId=${tranId}`,
     };
   }
   // patient appointments
