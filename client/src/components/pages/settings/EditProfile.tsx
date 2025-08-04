@@ -59,7 +59,7 @@ const EditProfile = ({ role }: { role: any }) => {
           alt="Profile Picture"
           width={100}
           height={100}
-          className="rounded-full mb-4 border-2 border-white/20 shadow-lg"
+          className="rounded-full mb-4 border-2 border-white/20 shadow-lg w-24 h-24 object-cover"
         />
         <Input
           type="file"
