@@ -1,4 +1,11 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Gender } from 'generated/prisma';
 
 export class CreateDoctorDto {
@@ -26,7 +33,7 @@ export class CreateDoctorDto {
   @IsNumber()
   @IsNotEmpty()
   visitFee: number;
-  
+
   @IsString()
   @IsNotEmpty()
   bio: string;
@@ -42,4 +49,8 @@ export class CreateDoctorDto {
   @IsString()
   @IsNotEmpty()
   experience: string;
+
+  @IsString()
+  @IsOptional()
+  imageUrl?: string;
 }

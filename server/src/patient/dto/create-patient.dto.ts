@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Gender } from 'generated/prisma';
 
 export class CreatePatientDto {
@@ -22,4 +22,9 @@ export class CreatePatientDto {
   @IsEnum(Gender as object, { message: 'Gender must be either male or female' })
   @IsNotEmpty()
   gender: Gender;
+
+
+  @IsString()
+  @IsOptional()
+  imageUrl: string;
 }

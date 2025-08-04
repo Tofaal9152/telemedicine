@@ -81,7 +81,10 @@ export class DoctorService {
 
   async updateProfile(id: string, updateDoctorDto: UpdateDoctorDto) {
     await this.findOne(id);
-    console.log(updateDoctorDto);
+    
+    // if(updateDoctorDto.imageUrl) {
+    //   return await this.prisma.user.update()
+    // }
     const updatedDoctor = await this.prisma.user.update({
       where: { id: id },
       data: {

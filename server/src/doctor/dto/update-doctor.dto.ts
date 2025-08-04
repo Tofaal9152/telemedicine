@@ -14,4 +14,6 @@ export class UpdateDoctorDto extends OmitType(PartialType(CreateDoctorDto), [
   @IsOptional()
   @IsString()
   experience?: string;
+
+  
 }

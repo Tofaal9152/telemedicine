@@ -17,6 +17,7 @@ model User {
   role               Role     @default(PATIENT)
   age                String?
   gender             Gender?
+  imageUrl           String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 

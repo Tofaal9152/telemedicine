@@ -16,6 +16,7 @@ import { ChatModule } from './chat/chat.module';
 import { AppService } from './app.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notification/notification.module';
+import { UploadModule } from './upload/upload.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -32,6 +33,7 @@ import { NotificationModule } from './notification/notification.module';
     PrescriptionModule,
     ChatModule,
     NotificationModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [PrismaService, AppService],
