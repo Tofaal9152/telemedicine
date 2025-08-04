@@ -3,13 +3,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import imagePath from "@/constants/imagePath";
 import Image from "next/image";
 import Link from "next/link";
 
 export function AppSidebarHeader({ session }: { session: any }) {
   const activeTeam = {
     name: "Telemedicin",
-    logo: "/logo.png",
+    logo: imagePath.logo,
   };
 
   return (
