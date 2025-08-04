@@ -78,6 +78,7 @@ const EditProfile = ({ role }: { role: any }) => {
         mutationFn={handleSubmit}
         className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl w-full container mx-auto text-white space-y-6"
         defaultValues={defaultValues}
+        queryKey={queryKey}
         submitText={mutation.isPending ? "Updating..." : "Update Profile"}
         onSuccess={() => {
           router.push("/");
