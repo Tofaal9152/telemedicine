@@ -38,7 +38,7 @@ const SigninPage = () => {
               width={240}
               height={240}
               className="relative rounded-full border-4 border-white shadow-2xl transform group-hover:scale-105 transition-transform duration-300"
-              withBlur={false}
+              
             />
           </div>
         </div>

@@ -1,43 +1,61 @@
 "use client";
 
-import imagePath from "@/constants/imagePath";
-import clsx from "clsx";
 import Image, { ImageProps } from "next/image";
+import { useState } from "react";
+import clsx from "clsx";
+import imagePath from "@/constants/imagePath";
 
-type CustomImageProps = ImageProps & {
-  className?: string;
-  wrapperClassName?: string;
-  withBlur?: boolean;
+
+interface AppImageProps extends ImageProps {
   fallbackSrc?: string;
-};
+}
 
 const CustomImage = ({
-  className,
-  wrapperClassName,
+  src,
   alt = "",
-  withBlur = true,
-  fallbackSrc,
+  className,
+  fallbackSrc = imagePath.logo,
   ...props
-}: CustomImageProps) => {
-   
-  return (
-    <div className={clsx("relative overflow-hidden", wrapperClassName)}>
-     
+}: AppImageProps) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    event.currentTarget.classList.remove("opacity-0");
+  };
+
+  if (!src) {
+    return (
       <Image
         {...props}
+        src={fallbackSrc}
         alt={alt}
-        src={props.src || fallbackSrc || imagePath.imageNotAvailable}
+        onError={() => setImgSrc(fallbackSrc)}
+        quality={100}
+        priority
         className={clsx(
           className,
-          "transition-opacity duration-1000 opacity-0",
-          withBlur && "blur-sm"
+          "transition-opacity duration-700 opacity-0",
+          "will-change-transform"
         )}
-        priority
-        onLoad={(event) => {
-          event.currentTarget.classList.remove("opacity-0", "blur-sm");
-        }}
+        onLoad={handleImageLoad}
       />
-    </div>
+    );
+  }
+
+  return (
+    <Image
+      {...props}
+      src={imgSrc}
+      alt={alt}
+      onError={() => setImgSrc(fallbackSrc)}
+      quality={100}
+      className={clsx(
+        className,
+        "transition-opacity duration-700 opacity-0",
+        "will-change-transform"
+      )}
+      onLoad={handleImageLoad}
+    />
   );
 };
 

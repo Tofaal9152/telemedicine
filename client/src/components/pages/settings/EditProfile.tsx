@@ -1,7 +1,12 @@
 "use client";
+import { FileUploadAction } from "@/actions/file-upload";
 import { useUpdateProfile } from "@/actions/profile/EditProfileAction";
 import { SmartForm, SmartFormField } from "@/components/smart-form";
+import CustomImage from "@/components/ui/Image";
+import { Input } from "@/components/ui/input";
 import GetProfileData from "@/hooks/GetProfileData";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { z } from "zod";
 
 const profileSchema = z.object({
@@ -15,12 +20,25 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 const EditProfile = ({ role }: { role: any }) => {
+  const router = useRouter();
+  const [imageFile, setimageFile] = useState<any>("");
+
   const { query, queryKey, fetcherUrl } = GetProfileData({ role });
 
+  const fileUploadMutation = FileUploadAction();
   const mutation = useUpdateProfile({ fetcherUrl, queryKey });
 
   const handleSubmit = async (data: ProfileFormData) => {
-    mutation.mutate(data);
+    console.log("imageFile", imageFile);
+    let res: any;
+    if (imageFile) {
+      res = await fileUploadMutation.mutateAsync({ file: imageFile });
+    }
+    console.log("imageUrl", res);
+    mutation.mutate({
+      ...data,
+      imageUrl: res?.data?.url || query.data.imageUrl || "",
+    });
   };
 
   if (query.isLoading) return <div>Loading...</div>;
@@ -35,6 +53,25 @@ const EditProfile = ({ role }: { role: any }) => {
 
   return (
     <div>
+      <div className="flex flex-col space-y-4 items-center mb-6 ring-2 ring-white/20 p-4 rounded-2xl shadow-2xl">
+        <CustomImage
+          src={query.data.imageUrl}
+          alt="Profile Picture"
+          width={100}
+          height={100}
+          className="rounded-full mb-4 border-2 border-white/20 shadow-lg"
+        />
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file: any = e.target.files?.[0];
+            if (file) {
+              setimageFile(file);
+            }
+          }}
+        />
+      </div>
       <SmartForm
         key={JSON.stringify(defaultValues)}
         schema={profileSchema}
@@ -42,7 +79,9 @@ const EditProfile = ({ role }: { role: any }) => {
         className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl w-full container mx-auto text-white space-y-6"
         defaultValues={defaultValues}
         submitText={mutation.isPending ? "Updating..." : "Update Profile"}
-        onSuccess={(data) => console.log("Success:", data)}
+        onSuccess={() => {
+          router.push("/");
+        }}
         onError={(error) => console.error("Error:", error)}
       >
         {(form) => (

@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import CustomImage from "@/components/ui/Image"
-import imagePath from "@/constants/imagePath"
-import GetProfileData from "@/hooks/GetProfileData"
-import { User, Mail, Calendar, Users, Award, CheckCircle } from "lucide-react"
+import CustomImage from "@/components/ui/Image";
+import imagePath from "@/constants/imagePath";
+import GetProfileData from "@/hooks/GetProfileData";
+import { User, Mail, Calendar, Users, Award, CheckCircle } from "lucide-react";
 
 const HeroSection = ({ role }: { role: any }) => {
-  const {query} = GetProfileData({ role })
+  const { query } = GetProfileData({ role });
 
   if (query.isPending) {
     return (
@@ -25,11 +25,12 @@ const HeroSection = ({ role }: { role: any }) => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const userData = query.data
-  const imageUrl = role === "DOCTOR" ? imagePath.doctorImage : imagePath.patientImage
+  const userData = query.data;
+  const imageUrl =
+    role === "DOCTOR" ? imagePath.doctorImage : imagePath.patientImage;
 
   return (
     <section className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-12 text-white border border-white/20 hover:bg-white/15 transition-all duration-500 hover:shadow-3xl ">
@@ -39,12 +40,11 @@ const HeroSection = ({ role }: { role: any }) => {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
             <CustomImage
-              src={imageUrl}
+              src={userData?.imageUrl || imageUrl}
               width={240}
               height={240}
               alt="Profile"
-              className="relative rounded-full border-4 border-white shadow-2xl transform group-hover:scale-105 transition-transform duration-300"
-              withBlur={false}
+              className="rounded-full ring-2 ring-white/20 w-[10rem] h-[10rem] md:w-[12rem] md:h-[12rem] object-cover"
             />
             {userData?.doctor?.isApproved && (
               <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2 border-4 border-white shadow-lg animate-bounce">
@@ -66,10 +66,26 @@ const HeroSection = ({ role }: { role: any }) => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InfoCard icon={<Mail className="w-5 h-5" />} label="Email" value={userData.email} />
-                <InfoCard icon={<User className="w-5 h-5" />} label="Role" value={userData.role} />
-                <InfoCard icon={<Users className="w-5 h-5" />} label="Age" value={userData.age} />
-                <InfoCard icon={<User className="w-5 h-5" />} label="Gender" value={userData.gender} />
+                <InfoCard
+                  icon={<Mail className="w-5 h-5" />}
+                  label="Email"
+                  value={userData.email}
+                />
+                <InfoCard
+                  icon={<User className="w-5 h-5" />}
+                  label="Role"
+                  value={userData.role}
+                />
+                <InfoCard
+                  icon={<Users className="w-5 h-5" />}
+                  label="Age"
+                  value={userData.age}
+                />
+                <InfoCard
+                  icon={<User className="w-5 h-5" />}
+                  label="Gender"
+                  value={userData.gender}
+                />
                 <InfoCard
                   icon={<Calendar className="w-5 h-5" />}
                   label="Joined"
@@ -100,17 +116,31 @@ const HeroSection = ({ role }: { role: any }) => {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <InfoCard label="Doctor ID" value={userData.doctor.id} />
-                      <InfoCard label="Specialty" value={userData.doctor.specialty} />
-                      <InfoCard label="Experience" value={userData.doctor.experience} />
+                      <InfoCard
+                        label="Specialty"
+                        value={userData.doctor.specialty}
+                      />
+                      <InfoCard
+                        label="Experience"
+                        value={userData.doctor.experience}
+                      />
                       <InfoCard
                         label="Status"
-                        value={userData.doctor.isApproved ? "Approved" : "Pending"}
-                        className={userData.doctor.isApproved ? "text-green-300" : "text-yellow-300"}
+                        value={
+                          userData.doctor.isApproved ? "Approved" : "Pending"
+                        }
+                        className={
+                          userData.doctor.isApproved
+                            ? "text-green-300"
+                            : "text-yellow-300"
+                        }
                       />
                     </div>
                     {userData.doctor.bio && (
                       <div className="bg-white/5 rounded-lg p-4">
-                        <p className="text-sm text-blue-100 leading-relaxed">{userData.doctor.bio}</p>
+                        <p className="text-sm text-blue-100 leading-relaxed">
+                          {userData.doctor.bio}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -122,7 +152,9 @@ const HeroSection = ({ role }: { role: any }) => {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                 Welcome to HealthCare Pro!
               </h1>
-              <p className="text-xl text-blue-100">Your health journey starts here</p>
+              <p className="text-xl text-blue-100">
+                Your health journey starts here
+              </p>
             </div>
           )}
         </div>
@@ -130,26 +162,36 @@ const HeroSection = ({ role }: { role: any }) => {
 
       <style jsx>{`
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        
+
         @keyframes expand {
-          from { width: 0; }
-          to { width: 6rem; }
+          from {
+            width: 0;
+          }
+          to {
+            width: 6rem;
+          }
         }
-        
+
         .animate-fade-in {
           animation: fade-in 0.8s ease-out;
         }
-        
+
         .animate-expand {
           animation: expand 1s ease-out 0.5s both;
         }
       `}</style>
     </section>
-  )
-}
+  );
+};
 
 const InfoCard = ({
   icon,
@@ -157,10 +199,10 @@ const InfoCard = ({
   value,
   className = "",
 }: {
-  icon?: React.ReactNode
-  label: string
-  value: any
-  className?: string
+  icon?: React.ReactNode;
+  label: string;
+  value: any;
+  className?: string;
 }) => (
   <div
     className={`bg-white/5 rounded-lg p-3 border border-white/10 hover:bg-white/10 transition-all duration-200 hover:scale-105 ${className}`}
@@ -171,6 +213,6 @@ const InfoCard = ({
     </div>
     <p className="font-semibold text-white line-clamp-1">{value}</p>
   </div>
-)
+);
 
-export default HeroSection
+export default HeroSection;
