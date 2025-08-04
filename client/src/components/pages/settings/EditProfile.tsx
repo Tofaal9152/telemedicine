@@ -2,11 +2,11 @@
 import { FileUploadAction } from "@/actions/file-upload";
 import { useUpdateProfile } from "@/actions/profile/EditProfileAction";
 import { SmartForm, SmartFormField } from "@/components/smart-form";
-import CustomImage from "@/components/ui/Image";
 import { Input } from "@/components/ui/input";
 import GetProfileData from "@/hooks/GetProfileData";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 const profileSchema = z.object({
@@ -21,20 +21,32 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 
 const EditProfile = ({ role }: { role: any }) => {
   const router = useRouter();
-  const [imageFile, setimageFile] = useState<any>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { query, queryKey, fetcherUrl } = GetProfileData({ role });
 
   const fileUploadMutation = FileUploadAction();
   const mutation = useUpdateProfile({ fetcherUrl, queryKey });
 
+  // 👇 Create a preview URL for the selected file
+  useEffect(() => {
+    if (imageFile) {
+      const objectUrl = URL.createObjectURL(imageFile);
+      setPreviewUrl(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl); // Clean up
+      };
+    }
+  }, [imageFile]);
+
   const handleSubmit = async (data: ProfileFormData) => {
-    console.log("imageFile", imageFile);
     let res: any;
     if (imageFile) {
       res = await fileUploadMutation.mutateAsync({ file: imageFile });
     }
-    console.log("imageUrl", res);
+
     mutation.mutate({
       ...data,
       imageUrl: res?.data?.url || query.data.imageUrl || "",
@@ -54,8 +66,8 @@ const EditProfile = ({ role }: { role: any }) => {
   return (
     <div>
       <div className="flex flex-col space-y-4 items-center mb-6 ring-2 ring-white/20 p-4 rounded-2xl shadow-2xl">
-        <CustomImage
-          src={query.data.imageUrl}
+        <Image
+          src={previewUrl || query.data.imageUrl}
           alt="Profile Picture"
           width={100}
           height={100}
@@ -65,13 +77,14 @@ const EditProfile = ({ role }: { role: any }) => {
           type="file"
           accept="image/*"
           onChange={(e) => {
-            const file: any = e.target.files?.[0];
+            const file = e.target.files?.[0];
             if (file) {
-              setimageFile(file);
+              setImageFile(file);
             }
           }}
         />
       </div>
+
       <SmartForm
         key={JSON.stringify(defaultValues)}
         schema={profileSchema}
@@ -135,4 +148,5 @@ const EditProfile = ({ role }: { role: any }) => {
     </div>
   );
 };
+
 export default EditProfile;

@@ -2,10 +2,10 @@
 
 import type React from "react";
 
-import CustomImage from "@/components/ui/Image";
 import imagePath from "@/constants/imagePath";
 import GetProfileData from "@/hooks/GetProfileData";
-import { User, Mail, Calendar, Users, Award, CheckCircle } from "lucide-react";
+import { Award, Calendar, CheckCircle, Mail, User, Users } from "lucide-react";
+import Image from "next/image";
 
 const HeroSection = ({ role }: { role: any }) => {
   const { query } = GetProfileData({ role });
@@ -38,8 +38,8 @@ const HeroSection = ({ role }: { role: any }) => {
         {/* Profile Image */}
         <div className="w-full lg:w-1/3 flex justify-center group">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-            <CustomImage
+           
+            <Image
               src={userData?.imageUrl || imageUrl}
               width={240}
               height={240}
