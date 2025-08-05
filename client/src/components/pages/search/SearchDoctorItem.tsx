@@ -1,17 +1,27 @@
 import { CheckCircle, User, XCircle } from "lucide-react";
 import AppointMentPaymentBtn from "./AppointMentPaymentBtn";
+import CustomImage from "@/components/ui/Image";
 
 const SearchDoctorItem = ({ item }: { item: any }) => {
   return (
     <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-white space-y-6 hover:bg-white/10 transition-all duration-300 shadow-lg">
-      {/* Header */}
+      {/* Header with Image, Name, ID */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">{item.name}</h2>
+        <div className="flex items-center gap-4">
+          <CustomImage
+            src={item.imageUrl}
+            alt={`${item.name}'s profile`}
+            className="w-16 h-16 rounded-full"
+            width={64}
+            height={64}
+          />
+          <h2 className="text-2xl font-bold">{item.name}</h2>
+        </div>
+        {/* <span className="text-sm text-blue-200">ID: {item.id}</span> */}
       </div>
 
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <Info label="ID" value={item.id} />
         <Info label="Email" value={item.email} />
         <Info label="Age" value={item.age} />
         <Info label="Gender" value={item.gender} />

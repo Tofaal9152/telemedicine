@@ -8,7 +8,7 @@ const page = async () => {
   return (
     <div>
       <div className="p-6 InterFont">
-        <div className="flex items-center justify-between space-x-4 mb-6">
+        <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between space-x-4 mb-6">
           <div>
             <h2 className="text-2xl font-bold InterFont">Doctor Control</h2>
             <p className="text-sm text-muted-foreground InterFont">

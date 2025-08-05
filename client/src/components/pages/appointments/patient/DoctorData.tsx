@@ -1,6 +1,7 @@
 "use client";
 
 import { Award, Calendar, Mail, User, Users } from "lucide-react";
+import CustomImage from "@/components/ui/Image"; // ✅ Import image component
 
 const DoctorData = ({ data }: any) => {
   const doctor = data?.doctor;
@@ -11,13 +12,24 @@ const DoctorData = ({ data }: any) => {
   return (
     <section className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-12 text-white border border-white/20 hover:bg-white/15 transition-all duration-500 hover:shadow-3xl">
       <div className="space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-emerald-300 bg-clip-text text-transparent animate-fade-in">
-            Doctor Details
-          </h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full animate-expand" />
+        {/* Header with image */}
+        <div className="flex items-center gap-4">
+          <CustomImage
+            src={user.imageUrl}
+            alt={`${user.name}'s profile`}
+            className="w-16 h-16 rounded-full"
+            width={64}
+            height={64}
+          />
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-emerald-300 bg-clip-text text-transparent animate-fade-in">
+              Doctor Details
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full animate-expand" />
+          </div>
         </div>
 
+        {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InfoCard
             icon={<User className="w-5 h-5" />}
@@ -58,6 +70,7 @@ const DoctorData = ({ data }: any) => {
           />
         </div>
 
+        {/* Bio */}
         {doctor.bio && (
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <p className="text-sm text-blue-100 leading-relaxed">
@@ -66,7 +79,8 @@ const DoctorData = ({ data }: any) => {
           </div>
         )}
       </div>
-     
+
+      {/* Animations */}
       <style jsx>{`
         @keyframes fade-in {
           from {

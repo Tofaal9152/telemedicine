@@ -2,10 +2,12 @@
 
 import { PatientSignUpAction } from "@/actions/auth/PatientSignUpAction";
 import { Input } from "@/components/ui/input";
-import LoadingButton from "@/components/ui/LoadingButton";
 
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
 import SelectGender from "../dashboard/agentControl/SelectGender";
+import { Loader } from "lucide-react";
 const PatientSignupForm = () => {
   const [state, action, isPending] = useActionState(PatientSignUpAction, {
     errors: {},
@@ -36,9 +38,21 @@ const PatientSignupForm = () => {
       {state.errors.gender && (
         <p className="text-red-500 text-sm">{state.errors.gender}</p>
       )}
-      <LoadingButton disabled={isPending} className="w-full">
-        Sign Up
-      </LoadingButton>
+      <Label className="text-sm text-white">Upload Profile Image</Label>
+      <Input name="imageUrl" type="file" placeholder="Image URL" />
+      {state.errors.imageUrl && (
+        <p className="text-red-500 text-sm">{state.errors.imageUrl}</p>
+      )}
+
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Loader className="animate-spin mr-2" /> Signing Up...
+          </>
+        ) : (
+          "Patient Sign Up"
+        )}
+      </Button>
       {state.errors.formError && (
         <p className="text-red-500 text-sm">{state.errors.formError}</p>
       )}

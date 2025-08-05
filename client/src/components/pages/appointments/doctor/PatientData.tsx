@@ -2,6 +2,8 @@
 
 import { Calendar, Mail, User, Users } from "lucide-react";
 import DoctorPrescriptionContent from "../prescription/DoctorPrescriptionContent";
+import CustomImage from "@/components/ui/Image"; // ✅ Import image component
+
 const PatientData = ({
   data,
   appointmentId,
@@ -16,13 +18,24 @@ const PatientData = ({
   return (
     <section className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-12 text-white border border-white/20 hover:bg-white/15 transition-all duration-500 hover:shadow-3xl">
       <div className="space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent animate-fade-in">
-            Patient Details
-          </h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full animate-expand" />
+        {/* Header with image */}
+        <div className="flex items-center gap-4">
+          <CustomImage
+            src={patient.imageUrl}
+            alt={`${patient.name}'s profile`}
+            className="w-16 h-16 rounded-full"
+            width={64}
+            height={64}
+          />
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent animate-fade-in">
+              Patient Details
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full animate-expand" />
+          </div>
         </div>
 
+        {/* Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InfoCard
             icon={<User className="w-5 h-5" />}
@@ -57,6 +70,7 @@ const PatientData = ({
         <DoctorPrescriptionContent data={data} appointmentId={appointmentId} />
       </div>
 
+      {/* Animations */}
       <style jsx>{`
         @keyframes fade-in {
           from {

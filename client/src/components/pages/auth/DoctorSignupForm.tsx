@@ -2,8 +2,9 @@
 
 import { DoctorSignUpAction } from "@/actions/auth/DoctorSignUpAction";
 import { Input } from "@/components/ui/input";
-import LoadingButton from "@/components/ui/LoadingButton";
 
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
@@ -62,14 +63,30 @@ const DoctorSignupForm = () => {
       {state.errors.visitFee && (
         <p className="text-red-500 text-sm">{state.errors.visitFee}</p>
       )}
-      <Input name="registrationNumber" type="number" placeholder="BMDC Registration Number" />
+      <Input
+        name="registrationNumber"
+        type="number"
+        placeholder="BMDC Registration Number"
+      />
       {state.errors.registrationNumber && (
-        <p className="text-red-500 text-sm">{state.errors.registrationNumber}</p>
+        <p className="text-red-500 text-sm">
+          {state.errors.registrationNumber}
+        </p>
+      )}
+      <Input name="imageUrl" type="file" placeholder="Image URL" />
+      {state.errors.imageUrl && (
+        <p className="text-red-500 text-sm">{state.errors.imageUrl}</p>
       )}
 
-      <LoadingButton isLoading={isPending} className="w-full">
-        Sign Up
-      </LoadingButton>
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Loader className="animate-spin mr-2" /> Signing Up...
+          </>
+        ) : (
+          "Doctor Sign Up"
+        )}
+      </Button>
       {state.errors.formError && (
         <p className="text-red-500 text-sm">{state.errors.formError}</p>
       )}

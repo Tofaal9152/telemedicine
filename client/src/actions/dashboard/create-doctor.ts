@@ -1,9 +1,10 @@
-"use server";
-import apiServer from "@/lib/apiServer";
+"use client";
+import apiClient from "@/lib/apiClient";
 import HandleError from "@/lib/errorHandle";
 import { validateForm } from "@/lib/validateForm";
 import { DoctorRegisterType } from "@/types/auth";
 import { DoctorRegisterSchema } from "@/zod-schemas/auth";
+import { FileUploadActionServer } from "../file-upload";
 
 export const CreateDoctorAction = async (
   previousState: DoctorRegisterType,
@@ -16,7 +17,7 @@ export const CreateDoctorAction = async (
   }
 
   try {
-    await apiServer.post(`/admin/doctor`, {
+    const payload: any = {
       name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
@@ -27,7 +28,12 @@ export const CreateDoctorAction = async (
       bio: formData.get("bio"),
       visitFee: Number(formData.get("visitFee")),
       registrationNumber: formData.get("registrationNumber"),
-    });
+    };
+    const imageFile = formData.get("imageUrl");
+    if (imageFile && (imageFile as File).size > 0) {
+      payload.imageUrl = await FileUploadActionServer(imageFile as File);
+    }
+    await apiClient.post(`/admin/doctor`, payload);
 
     return {
       success: true,

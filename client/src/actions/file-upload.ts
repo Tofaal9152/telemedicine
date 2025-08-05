@@ -17,3 +17,16 @@ export function FileUploadAction() {
     },
   });
 }
+export async function FileUploadActionServer(data: any) {
+  console.log("Uploading file on server:", data);
+  const res = await apiClient.post(
+    `/upload`,
+    { file: data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return res?.data?.url || "";
+}

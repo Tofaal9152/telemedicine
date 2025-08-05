@@ -1,12 +1,13 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import LoadingButton from "@/components/ui/LoadingButton";
 import { useQueryClient } from "@tanstack/react-query";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { CreateDoctorAction } from "@/actions/dashboard/create-doctor";
+import { Button } from "@/components/ui/button";
 import SelectGender from "./SelectGender";
+import { Loader } from "lucide-react";
 const DoctorControlForm = () => {
   const [state, action, isPending] = useActionState(CreateDoctorAction, {
     errors: {},
@@ -68,14 +69,30 @@ const DoctorControlForm = () => {
       {state.errors.visitFee && (
         <p className="text-red-500 text-sm">{state.errors.visitFee}</p>
       )}
-      <Input name="registrationNumber" type="number" placeholder="BMDC Registration Number" />
+      <Input
+        name="registrationNumber"
+        type="number"
+        placeholder="BMDC Registration Number"
+      />
       {state.errors.registrationNumber && (
-        <p className="text-red-500 text-sm">{state.errors.registrationNumber}</p>
+        <p className="text-red-500 text-sm">
+          {state.errors.registrationNumber}
+        </p>
+      )}
+      <Input name="imageUrl" type="file" placeholder="Image URL" />
+      {state.errors.imageUrl && (
+        <p className="text-red-500 text-sm">{state.errors.imageUrl}</p>
       )}
 
-      <LoadingButton isLoading={isPending} className="w-full">
-        Sign Up
-      </LoadingButton>
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Loader className="animate-spin mr-2" /> Creating Doctor...
+          </>
+        ) : (
+          "Create Doctor"
+        )}
+      </Button>
       {state.errors.formError && (
         <p className="text-red-500 text-sm">{state.errors.formError}</p>
       )}

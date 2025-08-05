@@ -21,7 +21,7 @@ const AppointmentsPage = ({
     `/appointments/${appointmentId}`,
     ["appointment", appointmentId]
   );
-
+console.log(data)
   return (
     <LoadingErrorWrapper isLoading={isPending} error={error} isError={isError}>
       <Tabs defaultValue="profile" className="flex flex-col min-h-[70vh]">
