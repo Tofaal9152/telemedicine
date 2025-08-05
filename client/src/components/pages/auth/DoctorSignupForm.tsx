@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import SelectGender from "../dashboard/agentControl/SelectGender";
+import SelectDoctorSpeciality from "@/components/shared/selectDoctorSpeciality";
 const DoctorSignupForm = () => {
   const router = useRouter();
   const [state, action, isPending] = useActionState(DoctorSignUpAction, {
@@ -45,7 +46,7 @@ const DoctorSignupForm = () => {
       {state.errors.gender && (
         <p className="text-red-500 text-sm">{state.errors.gender}</p>
       )}
-      <Input name="specialty" type="text" placeholder="Specialty" />
+      <SelectDoctorSpeciality />
       {state.errors.specialty && (
         <p className="text-red-500 text-sm">{state.errors.specialty}</p>
       )}

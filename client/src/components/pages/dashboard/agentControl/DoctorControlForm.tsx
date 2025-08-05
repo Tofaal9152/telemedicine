@@ -8,6 +8,7 @@ import { CreateDoctorAction } from "@/actions/dashboard/create-doctor";
 import { Button } from "@/components/ui/button";
 import SelectGender from "./SelectGender";
 import { Loader } from "lucide-react";
+import SelectDoctorSpeciality from "@/components/shared/selectDoctorSpeciality";
 const DoctorControlForm = () => {
   const [state, action, isPending] = useActionState(CreateDoctorAction, {
     errors: {},
@@ -51,7 +52,7 @@ const DoctorControlForm = () => {
       {state.errors.gender && (
         <p className="text-red-500 text-sm">{state.errors.gender}</p>
       )}
-      <Input name="specialty" type="text" placeholder="Specialty" />
+     <SelectDoctorSpeciality/>
       {state.errors.specialty && (
         <p className="text-red-500 text-sm">{state.errors.specialty}</p>
       )}
