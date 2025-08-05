@@ -18,6 +18,7 @@ export class UploadController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(), // No disk usage
+      limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 5MB
     }),
   )
   async uploadFile(@UploadedFile() file: Express.Multer.File) {

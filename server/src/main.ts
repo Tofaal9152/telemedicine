@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { corsConfig, validationPipeConfig } from './utils';
 import { JwtAuthGuard } from './auth/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles/roles.guard';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,6 +29,9 @@ async function bootstrap() {
   // Roles Guard And JWT Auth Guard
   const reflector = new Reflector();
   app.useGlobalGuards(new JwtAuthGuard(reflector), new RolesGuard(reflector));
+// Increase body size limits
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   //  server listen on the specified port
   await app.listen(process.env.PORT ?? 8089);

@@ -12,9 +12,15 @@ export class PublicController {
   getApprovedDoctors(
     @Query() paginationDto: PaginationDto,
     @Query('query') query: string,
+    @Query('specialty') specialty: string,
     @Req() request: ExpressRequest,
   ) {
     const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
-    return this.publicService.getApprovedDoctors(query, paginationDto, baseUrl);
+    return this.publicService.getApprovedDoctors(query, specialty, paginationDto, baseUrl);
+  }
+
+  @Get('all-doctors-specialty')
+  getAllDoctorSpecialties() {
+    return this.publicService.findAllDoctorSpecialties();
   }
 }

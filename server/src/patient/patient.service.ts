@@ -24,6 +24,7 @@ export class PatientService {
         password: hashedPassword,
         age: user.age,
         gender: user.gender,
+        imageUrl: user.imageUrl,
         role: 'PATIENT',
         patient: {
           create: {},
@@ -71,6 +72,7 @@ export class PatientService {
           email: true,
           name: true,
           age: true,
+          imageUrl: true,
           role: true,
           gender: true,
           patient: true,

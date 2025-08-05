@@ -29,6 +29,7 @@ export class DoctorService {
         password: hashedPassword,
         age: user.age,
         gender: user.gender,
+        imageUrl: user.imageUrl,
         role: 'DOCTOR',
         doctor: {
           create: {
@@ -58,6 +59,7 @@ export class DoctorService {
         age: user.age,
         gender: user.gender,
         role: 'DOCTOR',
+        imageUrl: user.imageUrl,
         doctor: {
           create: {
             visitFee: user.visitFee,
@@ -81,7 +83,7 @@ export class DoctorService {
 
   async updateProfile(id: string, updateDoctorDto: UpdateDoctorDto) {
     await this.findOne(id);
-    
+
     // if(updateDoctorDto.imageUrl) {
     //   return await this.prisma.user.update()
     // }
@@ -121,6 +123,7 @@ export class DoctorService {
           name: true,
           age: true,
           gender: true,
+          imageUrl: true,
           role: true,
           doctor: {
             select: {
@@ -129,7 +132,7 @@ export class DoctorService {
               specialty: true,
               isApproved: true,
               visitFee: true,
-              registrationNumber: true, 
+              registrationNumber: true,
             },
           },
           createdAt: true,
@@ -207,6 +210,7 @@ export class DoctorService {
   // Get all approved doctors
   async findApprovedDoctors(
     query: string,
+    specialty: string,
     page: number,
     skip: number,
     limit: number,
@@ -219,14 +223,14 @@ export class DoctorService {
         orderBy: { createdAt: 'desc' },
         where: {
           role: 'DOCTOR',
-          doctor: { isApproved: true },
+          doctor: {
+            isApproved: true,
+            ...(specialty && {
+              specialty: { contains: specialty },
+            }),
+          },
           ...(query && {
-            OR: [
-              { name: { contains: query } },
-              {
-                doctor: { specialty: { contains: query } },
-              },
-            ],
+            OR: [{ name: { contains: query } }, { email: { contains: query } }],
           }),
         },
         select: {
@@ -236,6 +240,7 @@ export class DoctorService {
           age: true,
           gender: true,
           role: true,
+          imageUrl: true,
           doctor: {
             select: {
               bio: true,
@@ -272,5 +277,20 @@ export class DoctorService {
     );
 
     return { ...meta, results: data };
+  }
+
+  async findAllDoctorSpecialties() {
+    const specialties = await this.prisma.doctor.findMany({
+      where: {
+        isApproved: true,
+      },
+      select: {
+        id: true,
+        specialty: true,
+      },
+    });
+
+    const uniqueSpecialties = new Set(specialties.map((doc) => doc.specialty));
+    return Array.from(uniqueSpecialties);
   }
 }
