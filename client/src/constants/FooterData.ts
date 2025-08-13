@@ -3,7 +3,7 @@ import imagePath from "./imagePath";
 export const teamMembers = [
   {
     name: "DR. MOHAMMAD MONIRUJJAMAN KHAN [KMM]",
-    role: "Associate Professor",
+    role: "Professor",
     institution: "NSU",
     image: imagePath.ProfessorImage,
   },
